@@ -1,0 +1,3088 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Searchable DevOps reference: Linux, Git, Docker, Docker Compose, Ansible, Jenkins, GitHub Actions, Kubernetes, Prometheus, Nginx, Apache, AWS and Terraform commands, copy-ready config files and official docs.">
+<meta property="og:title" content="DevOps Command Reference">
+<meta property="og:description" content="Commands, copy-ready config files and official docs for Linux, Docker, Ansible, Kubernetes, Terraform and more.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0b6a86">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230e1620'/%3E%3Cpath d='M7 10l6 6-6 6' stroke='%235bb8d6' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M16 23h9' stroke='%235bb8d6' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+<title>DevOps Command Reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+/* Layout: sticky search bar + left rail of tools grouped by stage; main column = sections of command tables, editor-window file templates, docs lists */
+:root{
+  --bg:#f2f4f6; --surface:#ffffff; --ink:#14202a; --muted:#566673; --line:#d6dde3;
+  --accent:#0b6a86; --accent-soft:#dcedf3; --mark:#a8520c; --mark-soft:#fbeedd;
+  --code-bg:#0e1620; --code-bar:#16212d; --code-fg:#d3dfe9; --code-gut:#4a5d6d; --code-rule:#1c2a37;
+  --tk-key:#7cc6e3; --tk-str:#b8db8c; --tk-com:#6c8597; --tk-kw:#f2a96a; --tk-var:#e39ad0; --tk-num:#d9c37a;
+  --f-display:"Archivo","Arial Narrow",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"Cascadia Code",Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0c1218; --surface:#131c25; --ink:#dbe5ed; --muted:#8fa1b0; --line:#243341;
+  --accent:#5bb8d6; --accent-soft:#16303c; --mark:#f0a35c; --mark-soft:#33240f;
+  --code-bg:#091017; --code-bar:#101a24; --code-rule:#16222e; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0c1218; --surface:#131c25; --ink:#dbe5ed; --muted:#8fa1b0; --line:#243341;
+  --accent:#5bb8d6; --accent-soft:#16303c; --mark:#f0a35c; --mark-soft:#33240f;
+  --code-bg:#091017; --code-bar:#101a24; --code-rule:#16222e; color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:84px}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--f-body)}
+a{color:var(--accent)}
+code,kbd,.mono{font-family:var(--f-mono)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:10px}
+.top-in{max-width:1320px;margin:0 auto;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.brand{font-family:var(--f-display);font-stretch:78%;font-weight:800;font-size:20px;letter-spacing:.01em;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.brand .prompt{font-family:var(--f-mono);font-weight:700;color:var(--accent);font-size:16px}
+.search{flex:1 1 280px;display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:0 10px;min-width:0}
+.search:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.search input{flex:1;min-width:0;border:0;background:transparent;color:var(--ink);font:15px var(--f-mono);padding:9px 0;outline:none}
+.search .count{font:12px var(--f-mono);color:var(--muted);white-space:nowrap}
+.search kbd{font-size:11px;border:1px solid var(--line);border-radius:4px;padding:1px 5px;color:var(--muted)}
+
+.wrap{max-width:1320px;margin:0 auto;display:grid;grid-template-columns:230px minmax(0,1fr);gap:36px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 80px}
+nav.rail{position:sticky;top:calc(env(safe-area-inset-top,0px) + 76px);align-self:start;max-height:calc(100vh - 100px);overflow:auto;padding-right:6px}
+.rail h4{font:600 11px var(--f-body);text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin:18px 0 6px}
+.rail h4:first-child{margin-top:0}
+.rail a{display:flex;justify-content:space-between;align-items:baseline;gap:8px;text-decoration:none;color:var(--ink);padding:4px 8px;border-radius:6px;font-size:14px}
+.rail a span{font:11px var(--f-mono);color:var(--muted)}
+.rail a:hover{background:var(--accent-soft)}
+.rail a.on{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.rail a.dim{opacity:.35}
+
+.intro{max-width:72ch;margin-bottom:28px}
+.intro h1{font-family:var(--f-display);font-stretch:72%;font-weight:800;font-size:clamp(34px,5vw,52px);line-height:1;margin:0 0 12px;text-wrap:balance}
+.intro p{margin:0 0 10px;color:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:13px;color:var(--muted);margin-top:12px}
+.legend b{color:var(--ink);font-weight:600}
+.ph{color:var(--mark);font-style:italic}
+
+section.sec{border-top:2px solid var(--ink);padding-top:18px;margin-bottom:56px}
+.sec-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 16px;margin-bottom:6px}
+.sec-head h2{font-family:var(--f-display);font-stretch:75%;font-weight:800;font-size:clamp(26px,3.4vw,36px);line-height:1.05;margin:0}
+.src{font:12px var(--f-mono);color:var(--muted)}
+.sec-intro{color:var(--muted);max-width:75ch;margin:4px 0 14px}
+.note{border-left:3px solid var(--mark);background:var(--mark-soft);padding:10px 14px;border-radius:0 6px 6px 0;margin:0 0 18px;font-size:14px;max-width:85ch}
+.note b{color:var(--mark)}
+.jump{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 16px}
+.jump a{font:12px var(--f-mono);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:3px 10px;color:var(--muted);background:var(--surface)}
+.jump a:hover{border-color:var(--accent);color:var(--accent)}
+
+h3.part{font:600 12px var(--f-body);text-transform:uppercase;letter-spacing:.12em;color:var(--accent);margin:26px 0 10px;display:flex;align-items:center;gap:10px}
+h3.part::after{content:"";flex:1;height:1px;background:var(--line)}
+
+.group{margin-bottom:18px}
+.group h4{font:600 14px var(--f-body);margin:0 0 6px}
+.tbl{background:var(--surface);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.row{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr) 34px;gap:12px;align-items:start;padding:7px 8px 7px 12px;border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.row:hover{background:var(--accent-soft)}
+.row code{font-size:13px;line-height:1.5;white-space:pre-wrap;word-break:break-word;color:var(--ink)}
+.row .d{font-size:14px;color:var(--muted);line-height:1.45}
+.cp{border:1px solid transparent;background:transparent;color:var(--muted);border-radius:6px;width:30px;height:28px;cursor:pointer;display:grid;place-items:center}
+.cp:hover,.cp:focus-visible{border-color:var(--line);color:var(--accent);background:var(--surface);outline:none}
+.cp.ok{color:#2f8f4e}
+.cp svg{width:15px;height:15px}
+
+.files{display:grid;gap:22px}
+figure.win{margin:0;min-width:0}
+.win-box{background:var(--code-bg);border-radius:10px;overflow:hidden;box-shadow:0 1px 0 rgba(0,0,0,.04),0 10px 28px -14px rgba(5,20,30,.45);border:1px solid var(--code-rule)}
+.win-bar{display:flex;align-items:center;gap:10px;background:var(--code-bar);padding:0 8px 0 12px;height:38px;border-bottom:1px solid var(--code-rule)}
+.dots{display:flex;gap:6px}
+.dots i{width:10px;height:10px;border-radius:50%;background:#3a4a58}
+.dots i:nth-child(1){background:#e0605a}.dots i:nth-child(2){background:#e3b341}.dots i:nth-child(3){background:#4fb36a}
+.tab{font:500 12.5px var(--f-mono);color:var(--code-fg);background:var(--code-bg);padding:0 12px;height:38px;display:flex;align-items:center;border-left:1px solid var(--code-rule);border-right:1px solid var(--code-rule);margin-left:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.lang{margin-left:auto;font:11px var(--f-mono);color:var(--code-gut);text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
+.win-bar .cp{color:var(--code-gut)}
+.win-bar .cp:hover,.win-bar .cp:focus-visible{background:var(--code-rule);border-color:var(--code-rule);color:var(--code-fg)}
+.win pre{margin:0;overflow-x:auto;padding:12px 0;font:13px/1.6 var(--f-mono);color:var(--code-fg);counter-reset:ln}
+.win pre .l{display:block;padding:0 16px 0 0;white-space:pre;min-height:1.6em}
+.win pre .l::before{counter-increment:ln;content:counter(ln);display:inline-block;width:3.2em;padding-right:1.1em;text-align:right;color:var(--code-gut);user-select:none}
+figcaption{font-size:14px;color:var(--muted);margin-top:8px;max-width:90ch}
+figcaption code{font-size:12.5px;background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:0 4px;color:var(--ink)}
+.t-key{color:var(--tk-key)}.t-str{color:var(--tk-str)}.t-com{color:var(--tk-com);font-style:italic}.t-kw{color:var(--tk-kw);font-weight:500}.t-var{color:var(--tk-var)}.t-num{color:var(--tk-num)}
+
+ul.docs{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px}
+ul.docs li{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 12px;min-width:0}
+ul.docs a{font-weight:600;text-decoration:none;display:block}
+ul.docs a:hover{text-decoration:underline}
+ul.docs span{display:block;font-size:13px;color:var(--muted)}
+ul.docs small{display:block;font:11px var(--f-mono);color:var(--muted);opacity:.8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.empty{padding:40px 0;color:var(--muted);font-size:16px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);font:13px var(--f-mono);padding:8px 14px;border-radius:8px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:40}
+.toast.show{opacity:1}
+
+.foot{max-width:1320px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 24px;border-top:1px solid var(--line);color:var(--muted);font-size:14px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px calc(28px + env(safe-area-inset-bottom,0px))}
+:root{padding-top:env(safe-area-inset-top,0px)}
+body{margin:0}
+[hidden]{display:none!important}
+img{max-width:100%}
+@media (max-width:900px){
+  .wrap{grid-template-columns:minmax(0,1fr);gap:0}
+  nav.rail{position:static;max-height:none;overflow-x:auto;overflow-y:hidden;display:flex;gap:6px;padding:0 0 14px;margin-bottom:10px;border-bottom:1px solid var(--line)}
+  .rail h4{display:none}
+  .rail a{white-space:nowrap;border:1px solid var(--line);background:var(--surface)}
+  .rail a span{display:none}
+  .row{grid-template-columns:minmax(0,1fr) 34px}
+  .row .d{grid-column:1;grid-row:2;margin-top:-4px}
+  .row .cp{grid-column:2;grid-row:1}
+}
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-in">
+    <div class="brand"><span class="prompt">$_</span>DevOps Command Reference</div>
+    <label class="search" for="q">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="Search commands, files, docs…  e.g. port, volume, rollout" autocomplete="off" spellcheck="false">
+      <span class="count" id="count"></span><kbd>/</kbd>
+    </label>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="rail" id="rail" aria-label="Sections"></nav>
+  <main id="main">
+    <div class="intro">
+      <h1>Commands and config files for everyday DevOps work</h1>
+      <p>A searchable reference built while studying DevOps &amp; Cloud: Linux, Git, Docker, Ansible, Jenkins, Kubernetes, Prometheus, web servers, AWS and Terraform. It covers what the course taught plus the extra commands you need in real work. Each tool has three parts: <b>commands</b>, <b>files</b> (ready-to-copy templates shown as editor windows) and <b>docs</b>.</p>
+      <div class="legend"><span><span class="ph">&lt;name&gt;</span> = replace with your value</span><span><b>a / b</b> = alternatives</span><span>Click <b>⧉</b> to copy</span><span>Press <b>/</b> to search</span></div>
+    </div>
+    <div id="sections"></div>
+    <div class="empty" id="empty" hidden>No commands match that search. Try a shorter word, like <code>log</code> or <code>port</code>.</div>
+  </main>
+</div>
+<footer class="foot"><span>Open source on <a href="https://github.com/ramisalahhh/devops-command-reference">GitHub</a>. Found a mistake or want a command added? <a href="https://github.com/ramisalahhh/devops-command-reference/issues">Open an issue</a>.</span><span>Made by <a href="https://github.com/ramisalahhh">@ramisalahhh</a></span></footer>
+<div class="toast" id="toast" role="status" aria-live="polite">Copied</div>
+
+<!-- =====================================================================
+     CONTENT. Commands: "## Group" then "command ⟶ description".
+     Files: one <script type="text/plain" class="file">. Docs: "Title ⟶ url ⟶ note".
+     ===================================================================== -->
+
+<!-- ============ LINUX ============ -->
+<script type="text/plain" class="cmds" data-sec="linux">
+## Navigation & help
+pwd ⟶ Print the folder you are in
+ls -lah ⟶ List everything (hidden files too) with permissions and human sizes
+cd /path · cd .. · cd ~ · cd - ⟶ Go to a folder · up one level · home · previous folder
+man <command> ⟶ Full manual page (q to quit, / to search)
+<command> --help ⟶ Short usage help
+which <command> / whereis <command> ⟶ Where a program is installed
+history | grep <word> ⟶ Search commands you ran before
+!! / sudo !! ⟶ Re-run the last command (with sudo)
+alias ll='ls -lah' ⟶ Shortcut for a command; add it to ~/.bashrc to keep it
+clear ⟶ Clear the screen (Ctrl+L)
+## System info
+uname -a ⟶ Kernel and architecture
+cat /etc/os-release ⟶ Distribution name and version
+hostname / sudo hostnamectl set-hostname <name> ⟶ Show / change hostname
+uptime ⟶ Running time and load average
+free -h ⟶ RAM and swap usage
+date / cal ⟶ Date and time / calendar
+env / printenv PATH ⟶ Environment variables
+export VAR=value ⟶ Set a variable for this shell and its children
+source ~/.bashrc ⟶ Reload shell config without logging out
+## Keyboard
+Ctrl+C / Ctrl+Z / Ctrl+D ⟶ Stop program / suspend it / exit shell
+Ctrl+R ⟶ Reverse-search command history
+Tab (twice) ⟶ Auto-complete names and show options
+</script>
+<script type="text/plain" class="docs" data-sec="linux">
+TLCL: The Linux Command Line (free book) ⟶ https://linuxcommand.org/tlcl.php ⟶ Best beginner-to-pro Linux book
+Linux man pages ⟶ https://man7.org/linux/man-pages/ ⟶ Official manual for every command
+explainshell ⟶ https://explainshell.com/ ⟶ Paste a command, see what each part does
+tldr pages ⟶ https://tldr.sh/ ⟶ Short practical examples per command
+GNU Coreutils manual ⟶ https://www.gnu.org/software/coreutils/manual/coreutils.html ⟶ ls, cp, mv, chmod… in detail
+</script>
+
+<!-- ============ FILES ============ -->
+<script type="text/plain" class="cmds" data-sec="files">
+## Create, copy, move, delete
+touch file.txt ⟶ Create an empty file (or update its timestamp)
+mkdir dir ⟶ Create a folder
+mkdir -p a/b/c ⟶ Create nested folders in one go
+cp file1 file2 ⟶ Copy a file
+cp -r src/ dest/ ⟶ Copy a folder and everything inside
+mv old new ⟶ Move or rename
+rm file ⟶ Delete a file
+rm -r dir / rm -rf dir ⟶ Delete a folder (-f = no questions, be careful)
+rmdir dir ⟶ Delete an empty folder
+ln -s /target/path linkname ⟶ Symbolic (soft) link, like a shortcut
+ln file1 file2 ⟶ Hard link (same data, two names)
+tree -L 2 ⟶ Folder tree two levels deep (sudo apt install tree)
+## View & compare
+cat file ⟶ Print the whole file
+cat > file.txt / cat >> file.txt ⟶ Type text into a file / append (Ctrl+D to finish)
+less file / more file ⟶ Page through a file (q to quit)
+head -n 20 file ⟶ First 20 lines
+tail -n 20 file ⟶ Last 20 lines
+tail -f /var/log/syslog ⟶ Watch a log as it grows
+wc -l file ⟶ Count lines (-w words, -c bytes)
+stat file / file file ⟶ Metadata / detect the file type
+diff file1 file2 ⟶ Differences between two files
+## Find
+find / -name "*.conf" 2>/dev/null ⟶ Find by name, hide "permission denied" noise
+find . -type f -size +100M ⟶ Files bigger than 100 MB
+find . -type d -name logs ⟶ Folders named logs
+find . -mtime -1 ⟶ Changed in the last 24 h
+find . -name "*.log" -delete ⟶ Find and delete
+locate nginx.conf ⟶ Instant search from an index (run sudo updatedb first)
+## Archives
+tar -czvf backup.tar.gz dir/ ⟶ Create a .tar.gz archive
+tar -xzvf backup.tar.gz -C /dest ⟶ Extract into a folder
+tar -tzvf backup.tar.gz ⟶ List what's inside
+zip -r site.zip dir/ / unzip site.zip ⟶ Zip / unzip
+gzip file / gunzip file.gz ⟶ Compress / decompress one file
+## Editors
+nano file ⟶ Simple editor: Ctrl+O save, Ctrl+X exit
+vim file ⟶ i = insert · Esc · :w save · :q quit · :wq save+quit · :q! quit without saving
+vim: /word · dd · yy · p · u ⟶ Search · delete line · copy line · paste · undo
+## Important folders
+/etc ⟶ System and service configuration
+/var/log ⟶ Logs
+/home/<user> · /root ⟶ User home folders · root's home
+/usr/bin · /usr/local/bin ⟶ Installed programs
+/tmp ⟶ Temporary files (cleared on reboot)
+/opt ⟶ Third-party software
+/var/www/html ⟶ Default web root for Nginx/Apache
+/proc · /dev ⟶ Live process/kernel info · devices (disks are /dev/sda, /dev/nvme0n1)
+/mnt · /media ⟶ Mount points for extra disks
+</script>
+<script type="text/plain" class="docs" data-sec="files">
+Filesystem Hierarchy Standard ⟶ https://refspecs.linuxfoundation.org/FHS_3.0/fhs/index.html ⟶ What each top-level folder is for
+find manual ⟶ https://man7.org/linux/man-pages/man1/find.1.html ⟶ All find options
+tar manual ⟶ https://www.gnu.org/software/tar/manual/tar.html ⟶ Archives in depth
+Vim help ⟶ https://vimhelp.org/ ⟶ Official Vim help, searchable
+</script>
+
+<!-- ============ TEXT ============ -->
+<script type="text/plain" class="cmds" data-sec="text">
+## Redirection & pipes
+cmd > out.txt ⟶ Save output to a file (overwrite)
+cmd >> out.txt ⟶ Append to a file
+cmd 2> error.txt ⟶ Save only errors
+cmd > all.txt 2>&1 ⟶ Output and errors into one file
+cmd < input.txt ⟶ Read input from a file
+cmd1 | cmd2 ⟶ Send output of cmd1 into cmd2
+cmd | tee out.txt ⟶ Show on screen and save at the same time
+cmd1 && cmd2 ⟶ Run cmd2 only if cmd1 succeeded
+cmd1 || cmd2 ⟶ Run cmd2 only if cmd1 failed
+echo "text" > file ⟶ Write text into a file
+## Search text
+grep "error" app.log ⟶ Lines containing a word
+grep -i · -r · -n · -v · -c ⟶ Ignore case · search folders · line numbers · invert · count
+grep -rn "listen" /etc/nginx/ ⟶ Find a setting across config files
+grep -E "fail|error" app.log ⟶ Regex with alternatives
+## Cut, transform, count
+cut -d: -f1 /etc/passwd ⟶ First field of a colon-separated file (all usernames)
+awk '{print $1}' access.log ⟶ Print the first column
+awk -F: '$3 >= 1000 {print $1}' /etc/passwd ⟶ Normal (non-system) users
+sed 's/old/new/g' file ⟶ Replace text and print the result
+sed -i 's/old/new/g' file ⟶ Replace inside the file
+sort / sort -n / sort -r ⟶ Sort alphabetically / numerically / reverse
+uniq -c ⟶ Count repeated lines (sort first)
+awk '{print $1}' access.log | sort | uniq -c | sort -rn | head ⟶ Top 10 visitor IPs from a web log
+tr 'a-z' 'A-Z' ⟶ Change characters (to uppercase)
+find . -name "*.tmp" | xargs rm ⟶ xargs turns input lines into arguments
+</script>
+<script type="text/plain" class="docs" data-sec="text">
+GNU grep manual ⟶ https://www.gnu.org/software/grep/manual/grep.html ⟶ Regex and options
+GNU sed manual ⟶ https://www.gnu.org/software/sed/manual/sed.html ⟶ Search and replace
+GNU awk user guide ⟶ https://www.gnu.org/software/gawk/manual/gawk.html ⟶ Column processing
+Bash redirections ⟶ https://www.gnu.org/software/bash/manual/html_node/Redirections.html ⟶ >, >>, 2>&1 explained
+regex101 ⟶ https://regex101.com/ ⟶ Test regular expressions
+</script>
+
+<!-- ============ PERMISSIONS ============ -->
+<script type="text/plain" class="cmds" data-sec="perms">
+## Reading ls -l
+-rwxr-xr-- 1 alice devops ⟶ type · owner rwx · group r-x · others r-- · owner · group
+r=4  w=2  x=1 ⟶ 755 = rwxr-xr-x · 644 = rw-r--r-- · 600 = rw------- · 400 = r--------
+## Change permissions
+chmod 755 script.sh ⟶ Set with numbers
+chmod +x script.sh ⟶ Make executable
+chmod u+w,g-w,o-r file ⟶ Add/remove for user, group, others
+chmod -R 755 dir ⟶ Apply to a folder and everything inside
+chmod 600 ~/.ssh/id_ed25519 · chmod 400 key.pem ⟶ Private keys must be private, or SSH refuses them
+umask ⟶ Default mask for new files (022 gives 644 files / 755 folders)
+## Change owner
+chown user file ⟶ Change owner
+chown user:group file ⟶ Owner and group
+sudo chown -R www-data:www-data /var/www/html ⟶ Typical web root ownership (Ubuntu)
+chgrp devops file ⟶ Change group only
+</script>
+<script type="text/plain" class="docs" data-sec="perms">
+chmod manual ⟶ https://man7.org/linux/man-pages/man1/chmod.1.html ⟶ Symbolic and numeric modes
+chmod calculator ⟶ https://chmod-calculator.com/ ⟶ Click boxes, get the number
+</script>
+
+<!-- ============ USERS ============ -->
+<script type="text/plain" class="cmds" data-sec="users">
+## Users
+sudo useradd -m -s /bin/bash jane ⟶ Create user with a home folder and bash shell
+sudo adduser jane ⟶ Interactive version (Ubuntu/Debian)
+sudo passwd jane ⟶ Set or change a password (no name = your own)
+sudo passwd -l jane / sudo passwd -u jane ⟶ Lock / unlock an account
+sudo usermod -aG docker jane ⟶ Add to a group (keep -a or you replace all groups)
+sudo usermod -aG sudo jane ⟶ Give sudo rights (wheel group on RHEL)
+sudo usermod -d /home/manav jane ⟶ Change home folder
+sudo usermod -s /bin/zsh jane ⟶ Change login shell
+sudo userdel -r jane ⟶ Delete user plus home folder and mail
+sudo useradd --no-create-home --shell /bin/false prometheus ⟶ Service user that can't log in
+## Groups
+sudo groupadd devops / sudo groupdel devops ⟶ Create / delete group
+groups jane ⟶ Groups a user belongs to
+sudo gpasswd -d jane devops ⟶ Remove user from a group
+## Who am I
+whoami ⟶ Current user
+id / id -u jane ⟶ UID, GID and groups / only the UID
+who / w ⟶ Who is logged in (and what they run)
+su - jane ⟶ Switch to another user with their environment
+sudo -i / sudo su ⟶ Root shell
+sudo visudo ⟶ Edit sudoers safely (syntax-checked)
+## Files
+/etc/passwd ⟶ user:x:UID:GID:info:home:shell (one line per user)
+/etc/shadow ⟶ Hashed passwords and password ageing (root only)
+/etc/group ⟶ Groups and members
+/etc/sudoers · /etc/sudoers.d/ ⟶ Who may use sudo
+/etc/default/useradd ⟶ Defaults used by useradd
+</script>
+<script type="text/plain" class="file" data-sec="users" data-name="/etc/sudoers.d/devops" data-lang="ini" data-note="Give a group sudo rights. Always edit with: sudo visudo -f /etc/sudoers.d/devops">
+# Members of the devops group can run any command with sudo
+%devops   ALL=(ALL:ALL) ALL
+
+# A deploy user can restart nginx without typing a password
+deploy    ALL=(root) NOPASSWD: /usr/bin/systemctl restart nginx
+</script>
+<script type="text/plain" class="docs" data-sec="users">
+useradd manual ⟶ https://man7.org/linux/man-pages/man8/useradd.8.html ⟶ All options
+usermod manual ⟶ https://man7.org/linux/man-pages/man8/usermod.8.html ⟶ Change existing users
+/etc/passwd format ⟶ https://man7.org/linux/man-pages/man5/passwd.5.html ⟶ The 7 fields
+/etc/shadow format ⟶ https://man7.org/linux/man-pages/man5/shadow.5.html ⟶ The 9 fields
+sudoers manual ⟶ https://www.sudo.ws/docs/man/sudoers.man/ ⟶ Rules syntax
+</script>
+
+<!-- ============ PROCESSES ============ -->
+<script type="text/plain" class="cmds" data-sec="procs">
+## Processes
+ps aux ⟶ All running processes
+ps auxf ⟶ Same, as a tree
+ps aux | grep nginx ⟶ Find one process
+top / htop ⟶ Live CPU and memory view (q to quit)
+kill <PID> ⟶ Ask a process to stop (SIGTERM)
+kill -9 <PID> ⟶ Force kill (SIGKILL)
+pkill nginx / killall nginx ⟶ Kill by name
+cmd & ⟶ Run in the background
+jobs · fg %1 · bg %1 ⟶ List jobs · bring to front · continue in background
+nohup cmd > out.log 2>&1 & ⟶ Keep running after you log out
+## Services (systemd)
+sudo systemctl status nginx ⟶ Is it running? Recent logs
+sudo systemctl start|stop|restart|reload nginx ⟶ Control a service
+sudo systemctl enable --now nginx ⟶ Start now and on every boot
+sudo systemctl disable nginx ⟶ Don't start on boot
+sudo systemctl daemon-reload ⟶ Reload after creating/editing a .service file
+systemctl list-units --type=service --state=running ⟶ Running services
+systemctl is-active nginx / is-enabled nginx ⟶ Quick yes/no checks
+## Logs
+journalctl -u docker.service ⟶ Logs for one service
+journalctl -u nginx -f ⟶ Follow live
+journalctl --since "1 hour ago" ⟶ Filter by time
+journalctl -p err -b ⟶ Only errors since last boot
+/var/log/syslog · /var/log/auth.log ⟶ Ubuntu system log · logins and sudo
+## Scheduling
+crontab -e ⟶ Edit your scheduled jobs
+crontab -l ⟶ List them
+sudo crontab -e ⟶ Root's jobs
+## Power
+sudo reboot · sudo poweroff · sudo shutdown -h now ⟶ Restart · power off · power off now
+</script>
+<script type="text/plain" class="file" data-sec="procs" data-name="/etc/systemd/system/myapp.service" data-lang="ini" data-note="Run any app as a service. Then: sudo systemctl daemon-reload && sudo systemctl enable --now myapp">
+[Unit]
+Description=My Node.js app
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=nodeapp
+Group=nodeapp
+WorkingDirectory=/opt/myapp
+ExecStart=/usr/bin/node server.js
+Restart=on-failure
+RestartSec=5
+Environment=NODE_ENV=production
+Environment=PORT=3000
+
+[Install]
+WantedBy=multi-user.target
+</script>
+<script type="text/plain" class="file" data-sec="procs" data-name="crontab -e" data-lang="bash" data-note="Five time fields, then the command. Check a schedule at crontab.guru.">
+# ┌──── minute (0-59)
+# │ ┌──── hour (0-23)
+# │ │ ┌──── day of month (1-31)
+# │ │ │ ┌──── month (1-12)
+# │ │ │ │ ┌──── day of week (0-6, Sunday = 0)
+# │ │ │ │ │
+  0 2 * * *    /opt/scripts/backup.sh >> /var/log/backup.log 2>&1
+*/5 * * * *    curl -fs http://localhost:3000/health || systemctl restart myapp
+  0 9 * * 1    /opt/scripts/weekly-report.sh
+@reboot        /opt/scripts/on-boot.sh
+</script>
+<script type="text/plain" class="docs" data-sec="procs">
+systemd.service manual ⟶ https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html ⟶ Every [Service] option
+systemctl manual ⟶ https://www.freedesktop.org/software/systemd/man/latest/systemctl.html ⟶ Service control
+journalctl manual ⟶ https://www.freedesktop.org/software/systemd/man/latest/journalctl.html ⟶ Log filters
+crontab.guru ⟶ https://crontab.guru/ ⟶ Check cron expressions
+</script>
+
+<!-- ============ PACKAGES ============ -->
+<script type="text/plain" class="cmds" data-sec="pkgs">
+## Ubuntu / Debian (apt)
+sudo apt update ⟶ Refresh the package list (do this first)
+sudo apt upgrade -y ⟶ Upgrade everything installed
+sudo apt install -y nginx git curl ⟶ Install packages
+sudo apt remove nginx / sudo apt purge nginx ⟶ Remove / remove including config
+sudo apt autoremove ⟶ Remove unused dependencies
+apt search <name> · apt show <name> ⟶ Search · package details
+apt list --installed | grep <name> ⟶ Is it installed?
+## .deb files (dpkg)
+sudo dpkg -i package.deb ⟶ Install a downloaded .deb
+sudo dpkg -r package ⟶ Remove it
+dpkg -l | grep nginx ⟶ List installed matching packages
+sudo apt -f install ⟶ Fix missing dependencies after dpkg -i
+## RHEL / CentOS / Amazon Linux (yum, dnf)
+sudo dnf install -y nginx / sudo yum install -y nginx ⟶ Install
+sudo yum install -y epel-release ⟶ Enable the extra-packages repo
+sudo dnf update -y ⟶ Update everything
+dnf list installed | grep nginx ⟶ Is it installed?
+</script>
+<script type="text/plain" class="docs" data-sec="pkgs">
+Ubuntu package management ⟶ https://ubuntu.com/server/docs/package-management ⟶ apt explained
+Ubuntu packages search ⟶ https://packages.ubuntu.com/ ⟶ Find which package has a file
+DNF documentation ⟶ https://dnf.readthedocs.io/en/latest/command_ref.html ⟶ RHEL family
+</script>
+
+<!-- ============ NETWORK ============ -->
+<script type="text/plain" class="cmds" data-sec="net">
+## Interfaces & routes
+ip a ⟶ IP addresses of every interface
+ip address show dev docker0 ⟶ One interface
+ip r / route -n ⟶ Routing table
+ifconfig ⟶ Older interface tool (sudo apt install net-tools)
+## Connectivity & DNS
+ping -c 4 google.com ⟶ Is the host reachable?
+traceroute google.com / tracepath google.com ⟶ The path packets take
+nslookup google.com ⟶ DNS lookup
+dig A google.com +short ⟶ DNS record (A, CNAME, MX, TXT…)
+host google.com ⟶ Quick DNS lookup
+## Ports & HTTP
+ss -tulpn ⟶ Listening ports and which process owns each
+netstat -tulpn / netstat -r ⟶ Older tool: ports / routes
+sudo lsof -i :80 ⟶ What is using port 80
+curl http://localhost:8080 ⟶ Test a local service
+curl -I https://example.com ⟶ Headers only (status code, server)
+curl -X POST -H "Content-Type: application/json" -d '{"a":1}' <url> ⟶ Send JSON
+wget <url> / wget -O name <url> ⟶ Download a file
+## Firewall
+sudo ufw allow 22/tcp && sudo ufw enable && sudo ufw status ⟶ Ubuntu firewall
+sudo firewall-cmd --add-port=80/tcp --permanent && sudo firewall-cmd --reload ⟶ RHEL firewall
+## SSH & keys
+ssh user@<ip> ⟶ Connect to a server
+ssh -i key.pem ubuntu@<ec2-public-ip> ⟶ Connect with a key file (AWS EC2)
+ssh-keygen -t ed25519 -C "you@example.com" ⟶ Create a key pair (~/.ssh/id_ed25519 and .pub)
+ssh-keygen -t rsa -b 4096 ⟶ RSA key (as in the course)
+ssh-copy-id user@<ip> ⟶ Install your public key on a server = password-less login
+cat ~/.ssh/id_ed25519.pub ⟶ Show your public key (safe to share)
+ssh-keygen -R <ip> ⟶ Remove an old entry from known_hosts
+scp file.txt user@<ip>:/path/ ⟶ Copy a file to a server
+scp -r user@<ip>:/path/dir ./ ⟶ Copy a folder from a server
+rsync -avz dir/ user@<ip>:/path/ ⟶ Sync a folder (sends only changes)
+sudo vim /etc/ssh/sshd_config && sudo systemctl restart ssh ⟶ Edit SSH server settings, then restart
+~/.ssh/known_hosts · ~/.ssh/authorized_keys ⟶ Servers you trust · keys allowed to log in as you
+</script>
+<script type="text/plain" class="file" data-sec="net" data-name="~/.ssh/config" data-lang="ini" data-note="Nicknames for servers. After this, ssh web1 is enough. Ansible also reads it.">
+Host web1
+    HostName 192.168.1.10
+    User ubuntu
+    IdentityFile ~/.ssh/id_ed25519
+
+Host aws-node
+    HostName ec2-3-120-45-67.compute-1.amazonaws.com
+    User ubuntu
+    IdentityFile ~/.ssh/aws-key.pem
+
+# Defaults for every host
+Host *
+    ServerAliveInterval 60
+</script>
+<script type="text/plain" class="docs" data-sec="net">
+ssh_config manual ⟶ https://man.openbsd.org/ssh_config ⟶ Every ~/.ssh/config option
+sshd_config manual ⟶ https://man.openbsd.org/sshd_config ⟶ Server-side SSH settings
+ssh-keygen manual ⟶ https://man.openbsd.org/ssh-keygen ⟶ Key types and options
+ip command manual ⟶ https://man7.org/linux/man-pages/man8/ip.8.html ⟶ Interfaces and routes
+UFW guide (Ubuntu) ⟶ https://help.ubuntu.com/community/UFW ⟶ Simple firewall
+curl manual ⟶ https://curl.se/docs/manpage.html ⟶ All curl flags
+</script>
+
+<!-- ============ STORAGE ============ -->
+<script type="text/plain" class="cmds" data-sec="storage">
+## Disks & filesystems
+lsblk ⟶ Disks and partitions as a tree
+df -h ⟶ Free space on each mounted filesystem
+du -sh * ⟶ Size of each item in this folder
+du -sh /var/log ⟶ Size of one folder
+sudo fdisk -l ⟶ All partition tables
+sudo fdisk /dev/sdb ⟶ Partition a disk (m help · n new · p print · w write)
+sudo mkfs.xfs /dev/sdb1 / sudo mkfs.ext4 /dev/sdb1 ⟶ Create a filesystem
+sudo mkdir -p /mnt/mydisk && sudo mount /dev/sdb1 /mnt/mydisk ⟶ Mount it
+sudo umount /mnt/mydisk ⟶ Unmount
+sudo blkid ⟶ UUID of each partition (use it in /etc/fstab)
+sudo mount -a ⟶ Mount everything in /etc/fstab (test fstab before rebooting)
+lsof /var/log/syslog ⟶ Which processes have this file open
+dd if=/dev/zero of=/tmp/myfile bs=1024 count=100 ⟶ Create a 100 KB file
+## LVM: physical volume → volume group → logical volume
+sudo pvcreate /dev/sdb1 /dev/sdb2 ⟶ Turn partitions into physical volumes
+sudo vgcreate vg-nhvg /dev/sdb1 /dev/sdb2 ⟶ Pool them into a volume group
+sudo lvcreate -n nhlv -L 2G vg-nhvg ⟶ Make a 2 GB logical volume
+pvs · vgs · lvs ⟶ Short status (pvdisplay, vgdisplay, lvdisplay for detail)
+sudo mkfs -t xfs /dev/vg-nhvg/nhlv ⟶ Format the logical volume
+sudo mkdir /nhlvdir && sudo mount /dev/vg-nhvg/nhlv /nhlvdir ⟶ Mount it
+sudo vgextend vg-nhvg /dev/sdc1 ⟶ Add a new disk to the group
+sudo lvextend -r -L +1G /dev/vg-nhvg/nhlv ⟶ Grow by 1 GB and resize the filesystem too
+sudo xfs_growfs /nhlvdir / sudo resize2fs /dev/vg-nhvg/nhlv ⟶ Grow filesystem by hand (XFS / ext4)
+sudo umount /nhlvdir && sudo lvremove /dev/vg-nhvg/nhlv ⟶ Remove an LV (unmount first)
+sudo vgremove vg-nhvg && sudo pvremove /dev/sdb1 /dev/sdb2 ⟶ Then the group, then the PVs
+## Swap
+sudo mkswap /dev/sdd1 ⟶ Format a partition as swap
+sudo swapon /dev/sdd1 ⟶ Turn it on
+swapon --show / swapon -s ⟶ Active swap spaces
+sudo swapoff /dev/sdd1 ⟶ Turn it off
+sudo fallocate -l 2G /swapfile && sudo chmod 600 /swapfile && sudo mkswap /swapfile && sudo swapon /swapfile ⟶ Swap file instead of a partition (common on cloud VMs)
+</script>
+<script type="text/plain" class="file" data-sec="storage" data-name="/etc/fstab" data-lang="ini" data-note="Mounts that survive a reboot. After editing run sudo mount -a; an error here can stop the server from booting.">
+# <device>                                   <mount>    <type>  <options>  <dump> <fsck>
+UUID=3f2a9c1e-5b7d-4e0a-9d61-2c8b7f1e4a90    /data      ext4    defaults   0      2
+/dev/vg-nhvg/nhlv                            /nhlvdir   xfs     defaults   0      0
+/dev/sdd1                                    none       swap    sw         0      0
+/swapfile                                    none       swap    sw         0      0
+</script>
+<script type="text/plain" class="docs" data-sec="storage">
+LVM (Arch Wiki) ⟶ https://wiki.archlinux.org/title/LVM ⟶ Clearest LVM walkthrough
+lvm manual ⟶ https://man7.org/linux/man-pages/man8/lvm.8.html ⟶ All LVM commands
+fstab guide (Ubuntu) ⟶ https://help.ubuntu.com/community/Fstab ⟶ Fields and options
+Swap FAQ (Ubuntu) ⟶ https://help.ubuntu.com/community/SwapFaq ⟶ How much and how
+</script>
+
+<!-- ============ BASH ============ -->
+<script type="text/plain" class="cmds" data-sec="bash">
+## Run a script
+chmod +x script.sh && ./script.sh ⟶ Make executable, then run
+bash script.sh ⟶ Run without chmod
+bash -x script.sh ⟶ Debug: print every line as it runs
+shellcheck script.sh ⟶ Find bugs (sudo apt install shellcheck)
+## Syntax quick reference
+#!/bin/bash ⟶ Shebang: must be the first line
+name="Alice"; echo "$name" ⟶ Variable (no spaces around =)
+readonly PI=3.14 · unset name ⟶ Constant · delete variable
+read -p "Enter name: " name ⟶ Read user input
+$1 $2 · $# · $@ · $? · $$ ⟶ Arguments · count · all args · last exit code · script PID
+$(command) ⟶ Use a command's output as a value
+$((a * b)) ⟶ Arithmetic
+[ -f file ] · [ -d dir ] · [ -z "$s" ] · [ "$a" = "$b" ] ⟶ File exists · folder exists · empty string · strings equal
+-eq -ne -gt -lt -ge -le ⟶ Number comparisons
+echo 'source ~/scripts/jump.sh' >> ~/.bashrc ⟶ Load your own functions in every shell
+</script>
+<script type="text/plain" class="file" data-sec="bash" data-name="backup.sh" data-lang="bash" data-note="A real script: arguments, variables, a function, if, loop. Run: ./backup.sh /var/www/html">
+#!/bin/bash
+# backup.sh: back up a folder into a dated .tar.gz and keep the newest 5
+set -euo pipefail                 # stop on errors, unset variables, failed pipes
+
+SRC_DIR="${1:-/var/www/html}"     # first argument, or this default
+DEST_DIR="/backups"
+DATE=$(date +%F_%H-%M)
+ARCHIVE="$DEST_DIR/site_$DATE.tar.gz"
+KEEP=5
+
+log() {
+  echo "[$(date +%T)] $*"
+}
+
+if [ ! -d "$SRC_DIR" ]; then
+  log "Folder $SRC_DIR not found"
+  exit 1
+fi
+
+mkdir -p "$DEST_DIR"
+tar -czf "$ARCHIVE" "$SRC_DIR"
+log "Created $ARCHIVE ($(du -h "$ARCHIVE" | cut -f1))"
+
+count=0
+for f in $(ls -t "$DEST_DIR"/site_*.tar.gz); do
+  count=$((count + 1))
+  if [ "$count" -gt "$KEEP" ]; then
+    rm -f "$f"
+    log "Deleted old backup $f"
+  fi
+done
+</script>
+<script type="text/plain" class="file" data-sec="bash" data-name="syntax-snippets.sh" data-lang="bash" data-note="Copy the block you need: if/elif, case, loops, functions, arrays, reading a file.">
+#!/bin/bash
+
+# if / elif / else
+age=20
+if [ "$age" -ge 18 ]; then
+  echo "You can vote"
+elif [ "$age" -ge 16 ]; then
+  echo "Almost"
+else
+  echo "You cannot vote"
+fi
+
+# case
+read -p "Start or stop? " action
+case "$action" in
+  start) systemctl start nginx ;;
+  stop)  systemctl stop nginx ;;
+  *)     echo "Unknown option" ;;
+esac
+
+# for loops
+for fruit in apple mango banana; do
+  echo "Fruit: $fruit"
+done
+for i in {1..5}; do echo "Number $i"; done
+
+# while loop: read a file line by line
+while read -r line; do
+  echo "Host: $line"
+done < servers.txt
+
+# function with arguments and a return value
+area() {
+  local length=$1 width=$2
+  echo $((length * width))
+}
+result=$(area 4 5)
+echo "The area of the rectangle is: $result"
+
+# arrays
+servers=(web1 web2 db1)
+echo "First: ${servers[0]}  All: ${servers[@]}  Count: ${#servers[@]}"
+
+# check the last command
+if ping -c1 -W1 8.8.8.8 > /dev/null; then echo "online"; else echo "offline"; fi
+</script>
+<script type="text/plain" class="docs" data-sec="bash">
+Bash Reference Manual ⟶ https://www.gnu.org/software/bash/manual/bash.html ⟶ The official manual
+ShellCheck ⟶ https://www.shellcheck.net/ ⟶ Paste a script, get bugs explained
+Bash Guide (Greg's wiki) ⟶ https://mywiki.wooledge.org/BashGuide ⟶ Good practices
+Bash pitfalls ⟶ https://mywiki.wooledge.org/BashPitfalls ⟶ Common mistakes
+</script>
+
+<!-- ============ GIT ============ -->
+<script type="text/plain" class="cmds" data-sec="git">
+## First-time setup
+git config --global user.name "Your Name" ⟶ Name on your commits
+git config --global user.email "<you@example.com>" ⟶ Email on your commits (use your GitHub email)
+git config --global init.defaultBranch main ⟶ New repos start on main
+git config --list ⟶ Show all settings
+## Start a repo
+git init ⟶ Turn the current folder into a repo
+git clone <url> ⟶ Download a repo from GitHub
+## Daily work
+git status ⟶ What changed
+git add file · git add . · git add -A ⟶ Stage one file · this folder · everything
+git commit -m "message" ⟶ Save a snapshot
+git commit -am "message" ⟶ Stage tracked files and commit in one go
+git log --oneline --graph --all ⟶ History as a compact graph
+git diff · git diff --staged ⟶ Unstaged changes · staged changes
+git rm file · git mv old new ⟶ Delete / rename a tracked file
+## Branches
+git branch · git branch -a ⟶ Local branches · all including remote
+git switch -c feature / git checkout -b feature ⟶ Create a branch and switch to it
+git switch main / git checkout main ⟶ Switch branch
+git merge feature ⟶ Merge feature into the current branch
+git rebase main ⟶ Replay your commits on top of main
+git branch -d feature / git branch -D feature ⟶ Delete branch (force)
+## Remote (GitHub)
+git remote add origin <url> ⟶ Connect the repo to GitHub
+git remote -v ⟶ Show remotes
+git push -u origin main ⟶ First push; later just git push
+git pull ⟶ Fetch and merge from GitHub
+git fetch ⟶ Download changes without merging
+git push origin --delete feature ⟶ Delete a remote branch
+## Undo
+git restore file ⟶ Throw away unstaged changes to a file
+git restore --staged file ⟶ Unstage (keep the change)
+git commit --amend -m "new message" ⟶ Fix the last commit message
+git reset --soft HEAD~1 ⟶ Undo last commit, keep changes staged
+git reset --hard HEAD~1 ⟶ Undo last commit and delete its changes (careful)
+git revert <commit> ⟶ New commit that undoes an old one (safe on shared branches)
+git stash · git stash pop · git stash list ⟶ Shelve work · bring it back · list shelves
+## Tags & cleanup
+git tag -a v1.0 -m "First release" ⟶ Annotated tag
+git push --tags ⟶ Push tags to GitHub
+git gc ⟶ Clean up and compress the repo
+</script>
+<script type="text/plain" class="file" data-sec="git" data-name=".gitignore" data-lang="bash" data-note="Files Git should never track. Put it in the repo root. Never commit .env files, keys or Terraform state.">
+# Dependencies
+node_modules/
+venv/
+__pycache__/
+
+# Secrets and local config
+.env
+*.pem
+*.key
+
+# Build output and logs
+dist/
+build/
+*.log
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+
+# OS and editor junk
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+</script>
+<script type="text/plain" class="docs" data-sec="git">
+Git reference ⟶ https://git-scm.com/docs ⟶ Every git command
+Pro Git book (free) ⟶ https://git-scm.com/book/en/v2 ⟶ Read chapters 1–3 first
+GitHub Docs ⟶ https://docs.github.com/en ⟶ Repos, PRs, SSH keys
+Adding an SSH key to GitHub ⟶ https://docs.github.com/en/authentication/connecting-to-github-with-ssh ⟶ Push without passwords
+gitignore templates ⟶ https://github.com/github/gitignore ⟶ Ready .gitignore per language
+Learn Git Branching ⟶ https://learngitbranching.js.org/ ⟶ Interactive branching practice
+</script>
+
+<!-- ============ DOCKER ============ -->
+<script type="text/plain" class="cmds" data-sec="docker">
+## Images
+docker pull nginx:latest ⟶ Download an image from Docker Hub
+docker images / docker image ls ⟶ List local images
+docker build -t myapp:1.0 . ⟶ Build from the Dockerfile in this folder
+docker build -f Dockerfile.prod -t myapp:prod . ⟶ Use a different Dockerfile
+docker tag myapp:1.0 <dockerhub-user>/myapp:1.0 ⟶ Name it for Docker Hub
+docker login && docker push <dockerhub-user>/myapp:1.0 ⟶ Upload to Docker Hub
+docker rmi <image> / docker image rm <image> ⟶ Delete an image
+docker history myapp:1.0 ⟶ Layers and their sizes
+docker search nginx ⟶ Search Docker Hub
+## Run containers
+docker run -d -p 8080:80 --name web nginx ⟶ Background, host port 8080 → container port 80
+docker run -it ubuntu bash ⟶ Interactive shell in a new container
+docker run --rm alpine echo hi ⟶ Delete the container when it exits
+docker run -e KEY=value --env-file .env myapp ⟶ Environment variables
+docker run -d --restart unless-stopped nginx ⟶ Restart automatically
+docker run -d --memory 512m --cpus 1 nginx ⟶ Limit resources (cgroups)
+docker ps / docker ps -a ⟶ Running / all containers
+docker stop web · docker start web · docker restart web ⟶ Lifecycle
+docker rm web / docker rm -f web ⟶ Delete (force if running)
+## Inspect & debug
+docker logs -f web ⟶ Follow container logs
+docker logs --tail 50 web ⟶ Last 50 lines
+docker exec -it web bash ⟶ Shell inside a running container (use sh on alpine)
+docker exec web ls /usr/share/nginx/html ⟶ Run one command inside
+docker inspect web ⟶ All details as JSON (IP, mounts, env)
+docker inspect -f '{{.NetworkSettings.IPAddress}}' web ⟶ Just the IP
+docker stats ⟶ Live CPU / memory per container
+docker top web ⟶ Processes inside a container
+docker cp web:/etc/nginx/nginx.conf . ⟶ Copy files out (or in, reversed)
+## Volumes & bind mounts
+docker volume create myvol ⟶ Create a named volume
+docker volume ls · docker volume inspect myvol ⟶ List · details (where it's stored)
+docker volume rm myvol ⟶ Delete a volume
+docker volume prune ⟶ Delete all unused volumes (careful: data loss)
+docker run -v myvol:/data alpine ⟶ Mount a named volume (Docker-managed, preferred)
+docker run -v $(pwd)/logs:/home/galaxy/logs <image> ⟶ Bind mount a host folder (absolute path)
+docker run -v data:/mydata:ro busybox ⟶ Read-only mount
+docker run -v /mydata busybox ⟶ Anonymous volume
+docker run --mount source=bizvol,target=/vol alpine ⟶ Long --mount syntax
+## Networks
+docker network ls ⟶ List networks (bridge, host, none)
+docker network create -d bridge mynet ⟶ User-defined bridge: containers find each other by name
+docker run -d --name c1 --network mynet alpine sleep 1d ⟶ Attach at start
+docker network connect mynet web ⟶ Attach a running container
+docker network inspect bridge ⟶ Containers and IPs on a network
+docker run --network host nginx ⟶ Share the host's network (no -p needed)
+docker network create -d macvlan --subnet=10.0.0.0/24 --gateway=10.0.0.1 -o parent=eth0.100 macvlan100 ⟶ MACVLAN network (from the course)
+docker run -it --dns=8.8.8.8 alpine sh ⟶ Custom DNS server
+brctl show ⟶ Linux bridges Docker created (sudo apt install bridge-utils)
+## Security
+docker run -u 1000:1000 myapp ⟶ Run as a non-root user
+docker run --cap-drop ALL --cap-add NET_BIND_SERVICE nginx ⟶ Only the Linux capabilities you need
+docker run --privileged nginx ⟶ Full host access (avoid)
+docker run --read-only myapp ⟶ Read-only root filesystem
+## Clean up
+docker system df ⟶ Disk used by images, containers, volumes
+docker container prune · docker image prune ⟶ Remove stopped containers · dangling images
+docker system prune -a ⟶ Remove everything unused (careful)
+## Docker Engine
+docker version · docker info ⟶ Versions · engine details (storage driver)
+sudo systemctl status docker ⟶ Is the daemon running?
+journalctl -u docker.service ⟶ Daemon logs
+sudo usermod -aG docker $USER ⟶ Use docker without sudo (log out and in after)
+## Dockerfile instructions
+FROM node:20-alpine ⟶ Base image (always first)
+WORKDIR /app ⟶ Working folder for the next instructions
+COPY src dest · ADD ⟶ Copy files in (ADD also extracts archives and fetches URLs)
+RUN apt-get update && apt-get install -y curl ⟶ Run at build time (each RUN = a layer)
+ENV KEY=value · ARG VERSION=1 ⟶ Runtime variable · build-time variable
+EXPOSE 3000 ⟶ Documents the port (you still need -p)
+USER node ⟶ Run as this user
+VOLUME /data ⟶ Mount point for a volume
+HEALTHCHECK CMD curl -f http://localhost:3000/ || exit 1 ⟶ Container health
+CMD ["node","server.js"] · ENTRYPOINT ["python"] ⟶ Default command · fixed executable
+## Linux containers before Docker (LXC, namespaces)
+sudo apt-get install lxc lxc-templates ⟶ Install LXC
+sudo lxc-create -n my_container -t ubuntu ⟶ Create from a template
+sudo lxc-start -n my_container -d · lxc-stop · lxc-destroy ⟶ Start (detached) · stop · delete
+sudo lxc-ls --fancy · sudo lxc-console -n my_container ⟶ List · attach
+lsns · ls -lai /proc/1/ns ⟶ List namespaces
+sudo unshare --uts /bin/bash ⟶ New UTS namespace (then hostname bar)
+</script>
+<script type="text/plain" class="file" data-sec="docker" data-name="Dockerfile" data-lang="docker" data-note="Node.js app. Build: docker build -t myapp:1.0 .   Run: docker run -d -p 3000:3000 myapp:1.0">
+# Small official Node.js base image
+FROM node:20-alpine
+
+# Folder inside the image where the app lives
+WORKDIR /usr/src/app
+
+# Copy only the dependency files first so this layer is cached
+COPY package*.json ./
+RUN npm ci --omit=dev
+
+# Copy the rest of the source code
+COPY . .
+
+ENV NODE_ENV=production
+EXPOSE 3000
+
+# Don't run as root (the node image ships a "node" user)
+USER node
+
+HEALTHCHECK --interval=30s CMD wget -qO- http://localhost:3000/ || exit 1
+
+# Command that starts the container
+CMD ["node", "server.js"]
+</script>
+<script type="text/plain" class="file" data-sec="docker" data-name="Dockerfile (multi-stage)" data-lang="docker" data-note="Build a React/Vue/Angular site with Node, then serve it with Nginx. The final image has no Node and no source code, so it is much smaller.">
+# ---------- Stage 1: build ----------
+FROM node:20-alpine AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+# ---------- Stage 2: serve ----------
+FROM nginx:1.27-alpine
+COPY --from=build /app/dist /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
+</script>
+<script type="text/plain" class="file" data-sec="docker" data-name="Dockerfile (Python)" data-lang="docker" data-note="Python/Flask app, the one the course's Compose example runs with python app.py.">
+FROM python:3.12-slim
+
+WORKDIR /code
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+EXPOSE 5000
+CMD ["python", "app.py"]
+</script>
+<script type="text/plain" class="file" data-sec="docker" data-name=".dockerignore" data-lang="bash" data-note="Keeps junk and secrets out of the image and makes builds faster. Lives next to the Dockerfile.">
+node_modules
+npm-debug.log
+.git
+.gitignore
+.env
+*.md
+Dockerfile*
+docker-compose*.yml
+</script>
+<script type="text/plain" class="docs" data-sec="docker">
+Docker CLI reference ⟶ https://docs.docker.com/reference/cli/docker/ ⟶ Every docker command
+Dockerfile reference ⟶ https://docs.docker.com/reference/dockerfile/ ⟶ Every instruction
+Dockerfile best practices ⟶ https://docs.docker.com/build/building/best-practices/ ⟶ Small, cached, secure images
+Multi-stage builds ⟶ https://docs.docker.com/build/building/multi-stage/ ⟶ Smaller production images
+Volumes ⟶ https://docs.docker.com/engine/storage/volumes/ ⟶ Persistent data
+Bind mounts ⟶ https://docs.docker.com/engine/storage/bind-mounts/ ⟶ Mount host folders
+Networking overview ⟶ https://docs.docker.com/engine/network/ ⟶ Bridge, host, overlay, macvlan
+Install Docker Engine (Ubuntu) ⟶ https://docs.docker.com/engine/install/ubuntu/ ⟶ Official install steps
+Docker Hub ⟶ https://hub.docker.com/ ⟶ Find official images
+</script>
+
+<!-- ============ COMPOSE ============ -->
+<script type="text/plain" class="cmds" data-sec="compose">
+## Run the stack
+docker compose up -d ⟶ Create and start every service in the background
+docker compose -f nh-compose.yml up -d ⟶ Use a file with a custom name
+docker compose up -d --build ⟶ Rebuild images first
+docker compose up -d --scale web=3 ⟶ Run 3 copies of a service
+docker compose down ⟶ Stop and remove containers and the network
+docker compose down -v ⟶ Also delete volumes (deletes data)
+## Inspect
+docker compose ps ⟶ Status of each service
+docker compose logs -f web ⟶ Follow logs of one service
+docker compose top ⟶ Processes in each container
+docker compose exec web sh ⟶ Shell inside a service
+docker compose config ⟶ Validate and print the final file
+## Lifecycle
+docker compose stop · start · restart ⟶ Without removing containers
+docker compose pull ⟶ Pull newer images
+docker compose build ⟶ Build images only
+## Install
+sudo apt install docker-compose-plugin ⟶ Compose v2 (docker compose, with a space), from Docker's apt repo
+docker compose version ⟶ Check it works
+</script>
+<script type="text/plain" class="file" data-sec="compose" data-name="docker-compose.yml (full template)" data-lang="yaml" data-note="App + Postgres + Nginx with env vars, named volume, private network and a health check. Values like ${DB_PASSWORD} come from a .env file in the same folder.">
+services:
+  app:
+    build:
+      context: ./api            # folder with the Dockerfile
+      dockerfile: Dockerfile
+    image: myuser/api:1.0
+    container_name: api
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DB_HOST: db               # service name = hostname on the network
+      DB_PORT: 5432
+    ports:
+      - "3000:3000"             # host:container
+    depends_on:
+      db:
+        condition: service_healthy
+    networks: [backend]
+
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: appdb
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d appdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [backend]
+
+  nginx:
+    image: nginx:1.27-alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on: [app]
+    networks: [backend]
+
+volumes:
+  db-data:
+
+networks:
+  backend:
+    driver: bridge
+</script>
+<script type="text/plain" class="file" data-sec="compose" data-name=".env" data-lang="ini" data-note="Read automatically by docker compose. Add .env to .gitignore.">
+DB_PASSWORD=change-me
+NODE_ENV=production
+APP_PORT=3000
+</script>
+<script type="text/plain" class="file" data-sec="compose" data-name="docker-compose.yml (course: counter app)" data-lang="yaml" data-note="The course example, completed with the long port syntax, a network and a volume. Run: docker compose up -d">
+services:
+  web-fe:
+    build: .
+    command: python app.py
+    ports:
+      - target: 5000          # port inside the container
+        published: 5000       # port on your machine
+    networks:
+      - counter-net
+    volumes:
+      - type: volume
+        source: counter-vol
+        target: /app
+
+  redis:
+    image: "redis:alpine"
+    networks:
+      counter-net:
+
+networks:
+  counter-net:
+
+volumes:
+  counter-vol:
+</script>
+<script type="text/plain" class="file" data-sec="compose" data-name="docker-compose.yml (course: MEAN stack)" data-lang="yaml" data-note="Angular + Express + MongoDB from the course slides. Each build: points at a folder with its own Dockerfile.">
+services:
+  angular:                    # front-end
+    build: client             # folder with the Dockerfile
+    ports:
+      - "4200:4200"
+
+  express:                    # API
+    build: api
+    ports:
+      - "3977:3977"
+    depends_on: [database]
+
+  database:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
+</script>
+<script type="text/plain" class="docs" data-sec="compose">
+Compose overview ⟶ https://docs.docker.com/compose/ ⟶ Start here
+Compose file reference ⟶ https://docs.docker.com/reference/compose-file/ ⟶ Every key you can use
+Compose services reference ⟶ https://docs.docker.com/reference/compose-file/services/ ⟶ ports, volumes, depends_on…
+docker compose CLI ⟶ https://docs.docker.com/reference/cli/docker/compose/ ⟶ All subcommands
+Awesome Compose samples ⟶ https://github.com/docker/awesome-compose ⟶ Ready stacks to copy
+</script>
+
+<!-- ============ ANSIBLE ============ -->
+<script type="text/plain" class="cmds" data-sec="ansible">
+## Install & check
+sudo apt install -y ansible ⟶ Install on the control node (Linux/macOS; on Windows use WSL)
+pipx install --include-deps ansible ⟶ Newer version via pipx
+ansible --version ⟶ Version and which ansible.cfg is being used
+## Ad-hoc commands
+ansible all -i hosts -m ping ⟶ Test connection to every host
+ansible webservers -i hosts -m ping ⟶ Only one group
+ansible all -m command -a "uptime" ⟶ Run a simple command
+ansible all -m shell -a "df -h | grep sda" ⟶ Shell module (pipes and > allowed)
+ansible all -m apt -a "name=nginx state=present update_cache=true" -b ⟶ Install a package as root (-b = become)
+ansible all -m copy -a "src=index.html dest=/var/www/html/" -b ⟶ Copy a file
+ansible all -m service -a "name=nginx state=restarted" -b ⟶ Restart a service
+ansible all -m setup ⟶ All gathered facts about the hosts
+ansible all -m setup -a "filter=ansible_distribution*" ⟶ Some facts only
+## Playbooks
+ansible-playbook -i hosts my-playbook.yaml ⟶ Run a playbook
+ansible-playbook site.yml --syntax-check ⟶ Check the YAML
+ansible-playbook site.yml --check --diff ⟶ Dry run showing what would change
+ansible-playbook site.yml --limit web1 ⟶ Only some hosts
+ansible-playbook site.yml --tags deploy ⟶ Only tasks with this tag
+ansible-playbook site.yml -e "version=1.0.0 linux_name=alice" ⟶ Pass variables
+ansible-playbook site.yml -e @project-vars.yml ⟶ Variables from a file
+ansible-playbook site.yml -K ⟶ Ask for the sudo password
+ansible-playbook site.yml -v / -vvv ⟶ More output for debugging
+ansible-playbook site.yml --list-hosts · --list-tasks ⟶ Preview targets / tasks
+ansible-playbook site.yml --start-at-task "Start the application" ⟶ Resume from a task
+## Inventory
+ansible-inventory -i hosts --graph ⟶ Groups and hosts as a tree
+ansible-inventory -i hosts --list ⟶ Everything as JSON (with variables)
+## Docs, Galaxy, collections, roles
+ansible-doc apt · ansible-doc -l ⟶ Module docs in the terminal · list modules
+ansible-galaxy collection install community.docker ⟶ Install a collection
+ansible-galaxy collection list ⟶ Installed collections
+ansible-galaxy role install geerlingguy.nginx ⟶ Install a role from Galaxy
+ansible-galaxy init roles/nginx ⟶ Create a role skeleton
+ansible-galaxy install -r requirements.yml ⟶ Install roles listed in a file
+## Vault (secrets)
+ansible-vault create secrets.yml ⟶ New encrypted file
+ansible-vault edit · view · encrypt · decrypt secrets.yml ⟶ Work with it
+ansible-playbook site.yml --ask-vault-pass ⟶ Run with encrypted vars
+## Config file search order
+ANSIBLE_CONFIG → ./ansible.cfg → ~/.ansible.cfg → /etc/ansible/ansible.cfg ⟶ The first file found wins; the rest are ignored
+## Modules you'll use most
+ansible.builtin.apt / yum / package ⟶ Install packages
+ansible.builtin.copy · template ⟶ Copy a file · render a Jinja2 template
+ansible.builtin.file ⟶ Create folders, links, set permissions
+ansible.builtin.service / systemd ⟶ Start, stop, enable services
+ansible.builtin.user · group ⟶ Manage users and groups
+ansible.builtin.command · shell ⟶ Run commands (prefer a real module when one exists)
+ansible.builtin.lineinfile ⟶ Change one line in a config file
+ansible.builtin.unarchive · get_url ⟶ Extract archives · download files
+ansible.builtin.git ⟶ Clone a repo
+ansible.builtin.debug ⟶ Print a message or variable
+ansible.builtin.wait_for ⟶ Wait for a port or file
+community.docker.docker_container ⟶ Run Docker containers
+</script>
+<script type="text/plain" class="file" data-sec="ansible" data-name="hosts" data-lang="ini" data-note="Inventory file (INI format): which servers, grouped by what/where/when. Used with -i hosts, or set as default in ansible.cfg.">
+[webservers]
+web1 ansible_host=192.168.1.10
+web2 ansible_host=192.168.1.11
+
+[databases]
+db1 ansible_host=192.168.1.20
+
+[nodeservers]
+node1 ansible_host=3.120.45.67 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/aws-key.pem
+
+# A group made of other groups
+[production:children]
+webservers
+databases
+
+# Variables for every host in a group
+[webservers:vars]
+ansible_user=ubuntu
+ansible_ssh_private_key_file=~/.ssh/id_ed25519
+
+[all:vars]
+ansible_python_interpreter=/usr/bin/python3
+</script>
+<script type="text/plain" class="file" data-sec="ansible" data-name="inventory.yml" data-lang="yaml" data-note="The same inventory in YAML format. Use either one.">
+all:
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  children:
+    webservers:
+      vars:
+        ansible_user: ubuntu
+      hosts:
+        web1:
+          ansible_host: 192.168.1.10
+        web2:
+          ansible_host: 192.168.1.11
+    databases:
+      hosts:
+        db1:
+          ansible_host: 192.168.1.20
+    production:
+      children:
+        webservers:
+        databases:
+</script>
+<script type="text/plain" class="file" data-sec="ansible" data-name="ansible.cfg" data-lang="ini" data-note="Project settings. Put it in the project folder so you don't need -i hosts every time.">
+[defaults]
+# Default inventory, so -i is optional
+inventory = ./hosts
+remote_user = ubuntu
+private_key_file = ~/.ssh/id_ed25519
+# Turn off the yes/no prompt for new hosts (only for temporary servers)
+host_key_checking = False
+interpreter_python = auto_silent
+roles_path = ./roles
+retry_files_enabled = False
+
+[privilege_escalation]
+become_method = sudo
+</script>
+<script type="text/plain" class="file" data-sec="ansible" data-name="nginx-playbook.yml" data-lang="yaml" data-note="A complete basic playbook: install, template, service and a handler. Run: ansible-playbook nginx-playbook.yml">
+---
+- name: Install and start nginx
+  hosts: webservers
+  become: true                      # run tasks with sudo
+  vars:
+    site_title: "Hello from Ansible"
+
+  tasks:
+    - name: Install nginx
+      ansible.builtin.apt:
+        name: nginx
+        state: present
+        update_cache: true
+
+    - name: Deploy the index page from a template
+      ansible.builtin.template:
+        src: templates/index.html.j2
+        dest: /var/www/html/index.html
+        mode: "0644"
+      notify: Restart nginx
+
+    - name: Make sure nginx is running and starts on boot
+      ansible.builtin.service:
+        name: nginx
+        state: started
+        enabled: true
+
+  handlers:
+    - name: Restart nginx
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
+</script>
+<script type="text/plain" class="file" data-sec="ansible" data-name="templates/index.html.j2" data-lang="yaml" data-note="Jinja2 template used by the playbook above. Variables and facts go inside double curly braces.">
+<h1>{{ site_title }}</h1>
+<p>Server: {{ ansible_hostname }} ({{ ansible_default_ipv4.address }})</p>
+<p>OS: {{ ansible_distribution }} {{ ansible_distribution_version }}</p>
+</script>
+<script type="text/plain" class="file" data-sec="ansible" data-name="deploy-node.yml (course project)" data-lang="yaml" data-note="The course project: install Node and npm, create a user, unpack the app artifact, start it and verify it runs. Run: ansible-playbook -i hosts deploy-node.yml">
+---
+- name: Install Node.js and npm
+  hosts: nodeservers
+  become: true
+  tasks:
+    - name: Update apt cache and install node + npm
+      ansible.builtin.apt:
+        update_cache: true
+        pkg:
+          - nodejs
+          - npm
+          - acl                     # needed when become_user is not root
+
+- name: Create a dedicated user to run the app
+  hosts: nodeservers
+  become: true
+  vars_files:
+    - project-vars.yml
+  tasks:
+    - name: Create the app user
+      ansible.builtin.user:
+        name: "{{ linux_name }}"
+        comment: Node app user
+        shell: /bin/bash
+
+- name: Deploy the Node.js app
+  hosts: nodeservers
+  become: true
+  become_user: "{{ linux_name }}"   # run as the new user, not root
+  vars_files:
+    - project-vars.yml
+  tasks:
+    - name: Copy and unpack the app artifact
+      ansible.builtin.unarchive:
+        src: "{{ location }}/nodejs-app-{{ version }}.tgz"
+        dest: "/home/{{ linux_name }}"
+
+    - name: Install dependencies
+      community.general.npm:
+        path: "/home/{{ linux_name }}/package"
+
+    - name: Start the application
+      ansible.builtin.command:
+        chdir: "/home/{{ linux_name }}/package/app"
+        cmd: node server
+      async: 1000                   # keep it running in the background
+      poll: 0
+
+    - name: Check the app is running
+      ansible.builtin.shell: ps aux | grep node
+      register: app_status          # save the output in a variable
+      changed_when: false
+
+    - name: Show the result
+      ansible.builtin.debug:
+        msg: "{{ app_status.stdout_lines }}"
+</script>
+<script type="text/plain" class="file" data-sec="ansible" data-name="project-vars.yml" data-lang="yaml" data-note="External variables file for the project (one of the three places to define variables). Or pass them with -e.">
+version: 1.0.0
+location: /home/alice/simplenodejs-app
+linux_name: nodeapp
+</script>
+<script type="text/plain" class="file" data-sec="ansible" data-name="loops-and-conditions.yml" data-lang="yaml" data-note="Variables, loops, when, register, lineinfile and handlers in one playbook.">
+---
+- name: Variables, loops, conditions and register
+  hosts: all
+  become: true
+  vars:
+    users: [ali, mona, omar]
+    packages:
+      - git
+      - curl
+      - htop
+
+  tasks:
+    - name: Install several packages at once
+      ansible.builtin.apt:
+        name: "{{ packages }}"
+        state: present
+        update_cache: true
+      when: ansible_os_family == "Debian"    # a gathered fact
+
+    - name: Create one user per name
+      ansible.builtin.user:
+        name: "{{ item }}"
+        groups: sudo
+        append: true
+        shell: /bin/bash
+      loop: "{{ users }}"
+
+    - name: Check disk usage
+      ansible.builtin.command: df -h /
+      register: disk
+      changed_when: false
+
+    - name: Print it
+      ansible.builtin.debug:
+        var: disk.stdout_lines
+
+    - name: Disable SSH password login
+      ansible.builtin.lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^#?PasswordAuthentication'
+        line: 'PasswordAuthentication no'
+      notify: Restart ssh
+
+    - name: Only on hosts in the webservers group
+      ansible.builtin.debug:
+        msg: "I am a web server"
+      when: "'webservers' in group_names"
+
+  handlers:
+    - name: Restart ssh
+      ansible.builtin.service:
+        name: ssh
+        state: restarted
+</script>
+<script type="text/plain" class="file" data-sec="ansible" data-name="docker-playbook.yml" data-lang="yaml" data-note="Ansible + Docker: install Docker on servers and run a container. Needs: ansible-galaxy collection install community.docker">
+---
+- name: Install Docker and run nginx in a container
+  hosts: webservers
+  become: true
+  tasks:
+    - name: Install Docker and the Python Docker library
+      ansible.builtin.apt:
+        name:
+          - docker.io
+          - python3-docker
+        state: present
+        update_cache: true
+
+    - name: Start Docker and enable it on boot
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Let the ubuntu user run docker without sudo
+      ansible.builtin.user:
+        name: ubuntu
+        groups: docker
+        append: true
+
+    - name: Run an nginx container
+      community.docker.docker_container:
+        name: web
+        image: nginx:1.27
+        state: started
+        restart_policy: unless-stopped
+        ports:
+          - "80:80"
+</script>
+<script type="text/plain" class="file" data-sec="ansible" data-name="roles/ (structure)" data-lang="plain" data-note="Created by ansible-galaxy init roles/nginx. Each folder holds a main.yml. Roles split big playbooks into reusable parts.">
+project/
+├── ansible.cfg
+├── hosts
+├── site.yml                  # main playbook that uses the roles
+├── group_vars/
+│   ├── all.yml               # variables for every host
+│   └── webservers.yml        # variables for one group
+├── host_vars/
+│   └── web1.yml              # variables for one host
+└── roles/
+    └── nginx/
+        ├── tasks/main.yml    # the steps
+        ├── handlers/main.yml # restart/reload actions
+        ├── templates/        # .j2 files
+        ├── files/            # static files to copy
+        ├── vars/main.yml     # role variables (high priority)
+        ├── defaults/main.yml # default variables (lowest priority)
+        └── meta/main.yml     # role info and dependencies
+</script>
+<script type="text/plain" class="file" data-sec="ansible" data-name="roles/nginx/tasks/main.yml" data-lang="yaml" data-note="Inside a role, tasks are a plain list: no hosts:, no play header.">
+---
+- name: Install nginx
+  ansible.builtin.apt:
+    name: nginx
+    state: present
+    update_cache: true
+
+- name: Deploy site config
+  ansible.builtin.template:
+    src: site.conf.j2
+    dest: /etc/nginx/sites-available/default
+  notify: Reload nginx
+
+- name: Start nginx
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: true
+</script>
+<script type="text/plain" class="file" data-sec="ansible" data-name="roles/nginx/handlers/main.yml" data-lang="yaml" data-note="Handlers run once at the end of the play, only if a task notified them.">
+---
+- name: Reload nginx
+  ansible.builtin.service:
+    name: nginx
+    state: reloaded
+</script>
+<script type="text/plain" class="file" data-sec="ansible" data-name="site.yml" data-lang="yaml" data-note="The short main playbook that applies roles to groups.">
+---
+- name: Configure web servers
+  hosts: webservers
+  become: true
+  roles:
+    - common
+    - nginx
+
+- name: Configure databases
+  hosts: databases
+  become: true
+  roles:
+    - common
+    - role: postgres
+      vars:
+        pg_version: 16
+</script>
+<script type="text/plain" class="file" data-sec="ansible" data-name="yaml-basics.yml" data-lang="yaml" data-note="YAML rules used by Ansible, Compose, Kubernetes and GitHub Actions. Indent with spaces, never tabs.">
+---                          # optional document start
+name: web-app                # key: value (a space after the colon)
+port: 8080                   # number
+enabled: true                # boolean: true / false
+version: "1.10"              # quote it if you want text, not a number
+nothing: null
+
+# List
+packages:
+  - nginx
+  - git
+packages_inline: [nginx, git]
+
+# Dictionary (map)
+user:
+  name: deploy
+  shell: /bin/bash
+user_inline: { name: deploy, shell: /bin/bash }
+
+# List of dictionaries (the shape of Ansible tasks)
+servers:
+  - name: web1
+    ip: 10.0.0.1
+  - name: web2
+    ip: 10.0.0.2
+
+# Multi-line text
+keep_lines: |
+  line one
+  line two
+fold_lines: >
+  these lines are
+  joined into one
+
+# In Ansible, quote a value that starts with {{
+log_path: "{{ app_dir }}/logs"
+</script>
+<script type="text/plain" class="docs" data-sec="ansible">
+Ansible documentation ⟶ https://docs.ansible.com/ansible/latest/ ⟶ Start page
+Getting started ⟶ https://docs.ansible.com/ansible/latest/getting_started/index.html ⟶ First inventory and playbook
+Playbook guide ⟶ https://docs.ansible.com/ansible/latest/playbook_guide/index.html ⟶ Plays, loops, conditions, handlers
+Inventory guide ⟶ https://docs.ansible.com/ansible/latest/inventory_guide/intro_inventory.html ⟶ Hosts, groups, variables
+Built-in modules ⟶ https://docs.ansible.com/ansible/latest/collections/ansible/builtin/index.html ⟶ apt, copy, service, user…
+All collections index ⟶ https://docs.ansible.com/ansible/latest/collections/index.html ⟶ community.docker, amazon.aws…
+Roles ⟶ https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_reuse_roles.html ⟶ Structure and reuse
+Configuration settings ⟶ https://docs.ansible.com/ansible/latest/reference_appendices/config.html ⟶ Every ansible.cfg option
+YAML syntax ⟶ https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html ⟶ YAML rules
+Vault ⟶ https://docs.ansible.com/ansible/latest/vault_guide/index.html ⟶ Encrypt secrets
+Ansible Galaxy ⟶ https://galaxy.ansible.com/ ⟶ Community roles and collections
+Course project app ⟶ https://github.com/Ahmed-Moourad/simplenodejs-app ⟶ The Node app from session 4
+</script>
+
+<!-- ============ CI/CD ============ -->
+<script type="text/plain" class="cmds" data-sec="cicd">
+## Install Jenkins (Ubuntu)
+sudo apt install -y fontconfig openjdk-21-jre ⟶ Jenkins needs Java (17 or 21)
+(add the Jenkins apt repo + key from jenkins.io/doc/book/installing/linux) ⟶ The repo key changes over time; copy that step from the official page
+sudo apt update && sudo apt install -y jenkins ⟶ Install
+sudo systemctl enable --now jenkins ⟶ Start now and on boot
+sudo cat /var/lib/jenkins/secrets/initialAdminPassword ⟶ Password for the first login
+http://<server-ip>:8080 ⟶ Jenkins web UI (open port 8080 in the firewall / security group)
+sudo usermod -aG docker jenkins && sudo systemctl restart jenkins ⟶ Let pipelines run docker
+docker run -d -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home jenkins/jenkins:lts ⟶ Or run Jenkins itself in Docker
+## Pipeline steps you'll use
+sh 'npm install' ⟶ Run a shell command
+git branch: 'main', url: '<repo-url>' ⟶ Check out code
+junit 'target/surefire-reports/*.xml' ⟶ Publish test results
+withCredentials([...]) { ... } ⟶ Use secrets saved in Jenkins → Credentials
+cleanWs() ⟶ Clean the workspace (Workspace Cleanup plugin)
+archiveArtifacts artifacts: 'dist/**' ⟶ Keep build output
+## GitHub Actions deploy setup
+ssh-keygen -t ed25519 -f ~/.ssh/deploy_key -N "" ⟶ Make a key pair only for deployments
+ssh-copy-id -i ~/.ssh/deploy_key.pub ubuntu@<server-ip> ⟶ Allow that key on the server
+gh secret set SSH_PRIVATE_KEY < ~/.ssh/deploy_key ⟶ Save the private key as a repo secret (GitHub CLI)
+gh secret set SSH_HOST --body "<server-ip>" ⟶ Other secrets: SSH_USER, DOCKERHUB_USERNAME, DOCKERHUB_TOKEN
+gh secret list ⟶ Check which secrets exist
+gh workflow run deploy.yml ⟶ Start a workflow by hand (needs workflow_dispatch)
+gh run list · gh run watch · gh run view --log-failed ⟶ Recent runs · follow one live · logs of failed steps
+## Build tools
+mvn clean compile test · mvn package ⟶ Java (Maven)
+npm ci · npm test · npm run build ⟶ Node.js
+</script>
+<script type="text/plain" class="file" data-sec="cicd" data-name="Jenkinsfile" data-lang="groovy" data-note="Declarative pipeline for a Node app: checkout → test → Docker build and push → deploy with Ansible. Put it in the repo root, then create a Pipeline job that uses 'Pipeline script from SCM'.">
+pipeline {
+    agent any
+
+    triggers {
+        pollSCM('H/5 * * * *')        // check Git about every 5 min (or use a GitHub webhook)
+    }
+
+    environment {
+        IMAGE = 'myuser/node-app'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/your-username/your-repo.git',
+                    credentialsId: 'github-creds'
+            }
+        }
+
+        stage('Build & Test') {
+            steps {
+                sh 'npm ci'
+                sh 'npm test'
+            }
+        }
+
+        stage('Docker Build & Push') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds',
+                                                  usernameVariable: 'DOCKER_USER',
+                                                  passwordVariable: 'DOCKER_PASS')]) {
+                    sh '''
+                        docker build -t $IMAGE:$BUILD_NUMBER .
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        docker push $IMAGE:$BUILD_NUMBER
+                    '''
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh 'ansible-playbook -i hosts deploy.yml -e "tag=$BUILD_NUMBER"'
+            }
+        }
+    }
+
+    post {
+        always  { cleanWs() }
+        success { echo 'Deployed successfully' }
+        failure { echo 'Pipeline failed, check the stage logs' }
+    }
+}
+</script>
+<script type="text/plain" class="file" data-sec="cicd" data-name="Jenkinsfile (Maven + JUnit)" data-lang="groovy" data-note="The course's Java example written as a valid declarative pipeline.">
+pipeline {
+    agent any
+
+    stages {
+        stage('Build & Test') {
+            steps {
+                sh 'mvn clean compile test'
+            }
+        }
+        stage('Package') {
+            steps {
+                sh 'mvn package -DskipTests'
+                archiveArtifacts artifacts: 'target/*.jar'
+            }
+        }
+    }
+
+    post {
+        always {
+            junit 'target/surefire-reports/*.xml'
+        }
+    }
+}
+</script>
+<script type="text/plain" class="file" data-sec="cicd" data-name=".github/workflows/ci.yml" data-lang="yaml" data-note="The same idea with GitHub Actions (no server needed). Add DOCKERHUB_USERNAME and DOCKERHUB_TOKEN in repo Settings → Secrets.">
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+      - run: npm test
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push the image
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          tags: myuser/node-app:${{ github.sha }}
+</script>
+<script type="text/plain" class="file" data-sec="cicd" data-name=".github/workflows/deploy.yml" data-lang="yaml" data-note="Full CD: on every push to main → test → build and push the image → SSH into your server and swap the running container. Add repo secrets DOCKERHUB_USERNAME, DOCKERHUB_TOKEN, SSH_HOST, SSH_USER, SSH_PRIVATE_KEY. The server needs Docker installed (see docker-playbook.yml in the Ansible section).">
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:              # adds a manual "Run workflow" button
+
+env:
+  IMAGE: myuser/node-app          # your Docker Hub user/repo
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm test
+
+  build-and-push:
+    needs: test                   # runs only if tests passed
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push the image
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          tags: |
+            ${{ env.IMAGE }}:${{ github.sha }}
+            ${{ env.IMAGE }}:latest
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    environment: production       # optional: add required reviewers in repo settings
+    steps:
+      - name: Set up the SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Pull the new image and restart the container
+        run: |
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << EOF
+            docker pull $IMAGE:${{ github.sha }}
+            docker rm -f node-app || true
+            docker run -d --name node-app --restart unless-stopped \
+              -p 80:3000 $IMAGE:${{ github.sha }}
+            docker image prune -f
+          EOF
+
+      - name: Check the site answers
+        run: curl -fsS --retry 10 --retry-delay 3 --retry-all-errors http://${{ secrets.SSH_HOST }}/ > /dev/null
+</script>
+<script type="text/plain" class="file" data-sec="cicd" data-name=".github/workflows/deploy-ansible.yml" data-lang="yaml" data-note="Same pipeline, but the deploy job runs your Ansible playbook (deploy.yml below), which is better when you have several servers. Keep hosts and deploy.yml in the repo.">
+name: Deploy with Ansible
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          push: true
+          tags: myuser/node-app:${{ github.sha }}
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Ansible and the Docker collection
+        run: |
+          pipx install ansible-core
+          ansible-galaxy collection install community.docker
+
+      - name: Set up the SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+
+      - name: Run the playbook
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: "False"
+        run: ansible-playbook -i hosts deploy.yml -e "tag=${{ github.sha }}"
+</script>
+<script type="text/plain" class="file" data-sec="cicd" data-name="deploy.yml (Ansible)" data-lang="yaml" data-note="The playbook both the Jenkinsfile and deploy-ansible.yml call: pull the image tag you pass with -e tag=..., replace the container, wait until the app answers, clean up old images. Needs: ansible-galaxy collection install community.docker">
+---
+- name: Deploy the app container
+  hosts: webservers
+  become: true
+  vars:
+    image: myuser/node-app
+    tag: latest                 # overridden with -e "tag=..."
+    app_port: 3000
+
+  tasks:
+    - name: Pull the new image
+      community.docker.docker_image:
+        name: "{{ image }}"
+        tag: "{{ tag }}"
+        source: pull
+
+    - name: Run the container (replaces the old one)
+      community.docker.docker_container:
+        name: node-app
+        image: "{{ image }}:{{ tag }}"
+        state: started
+        recreate: true
+        restart_policy: unless-stopped
+        ports:
+          - "80:{{ app_port }}"
+
+    - name: Wait until the app answers
+      ansible.builtin.uri:
+        url: http://localhost
+        status_code: 200
+      register: result
+      retries: 10
+      delay: 3
+      until: result.status == 200
+
+    - name: Remove old images
+      community.docker.docker_prune:
+        images: true
+</script>
+<script type="text/plain" class="docs" data-sec="cicd">
+Jenkins user handbook ⟶ https://www.jenkins.io/doc/book/ ⟶ Everything Jenkins
+Pipeline syntax ⟶ https://www.jenkins.io/doc/book/pipeline/syntax/ ⟶ stages, post, when, triggers
+Pipeline steps reference ⟶ https://www.jenkins.io/doc/pipeline/steps/ ⟶ sh, git, junit, withCredentials…
+Install Jenkins on Linux ⟶ https://www.jenkins.io/doc/book/installing/linux/ ⟶ Current repo key and steps
+Using credentials ⟶ https://www.jenkins.io/doc/book/using/using-credentials/ ⟶ Store secrets safely
+Jenkins plugins ⟶ https://plugins.jenkins.io/ ⟶ Git, Docker, Ansible plugins
+GitHub Actions docs ⟶ https://docs.github.com/en/actions ⟶ Workflows, runners, secrets, environments
+GitHub CLI manual ⟶ https://cli.github.com/manual/ ⟶ gh secret, gh workflow, gh run
+docker/build-push-action ⟶ https://github.com/docker/build-push-action ⟶ Build and push images in Actions
+community.docker collection ⟶ https://docs.ansible.com/ansible/latest/collections/community/docker/index.html ⟶ docker_container, docker_image modules
+</script>
+
+<!-- ============ KUBERNETES ============ -->
+<script type="text/plain" class="cmds" data-sec="k8s">
+## Local cluster
+minikube start · minikube status · minikube stop · minikube delete ⟶ Manage a local cluster
+minikube dashboard ⟶ Web dashboard
+minikube service <svc-name> --url ⟶ URL of a NodePort service
+kubectl version --client · kubectl cluster-info ⟶ Check kubectl and the cluster
+kubectl get nodes -o wide ⟶ Nodes with IPs
+## Look around
+kubectl get pods ⟶ Pods in the current namespace (-o wide, -A all namespaces, -w watch)
+kubectl get all ⟶ Pods, services, deployments, replicasets
+kubectl get deploy,rs,svc,pvc,cm,secret ⟶ Several kinds at once
+kubectl describe pod <name> ⟶ Details + events (first place to look when broken)
+kubectl get pod <name> -o yaml ⟶ Full YAML of a live object
+kubectl get ns --show-labels ⟶ Namespaces and labels
+kubectl get pods -l app=web ⟶ Filter by label
+kubectl api-resources ⟶ Every kind, its short name and apiVersion
+kubectl explain deployment.spec.strategy ⟶ Field docs in the terminal
+## Create, change, delete
+kubectl apply -f file.yaml ⟶ Create or update from YAML (-f folder/ for many)
+kubectl delete -f file.yaml ⟶ Delete what the file created
+kubectl create deployment web --image=nginx --replicas=3 ⟶ Quick deployment
+kubectl create deployment web --image=nginx --dry-run=client -o yaml > deploy.yaml ⟶ Generate a YAML starter
+kubectl expose deployment web --port=80 --type=NodePort ⟶ Create a service for it
+kubectl run tmp --image=busybox -it --rm -- sh ⟶ Throwaway debug pod
+kubectl create namespace dev ⟶ New namespace
+kubectl config set-context --current --namespace=dev ⟶ Make dev the default namespace
+kubectl label pod <name> env=dev ⟶ Add a label
+## Debug
+kubectl logs <pod> -f ⟶ Follow logs (-c <container> for multi-container pods)
+kubectl logs <pod> --previous ⟶ Logs of the crashed previous container
+kubectl exec -it <pod> -- sh ⟶ Shell inside a pod
+kubectl port-forward svc/web 8080:80 ⟶ Open a service on localhost:8080
+kubectl get events --sort-by=.metadata.creationTimestamp ⟶ Recent cluster events
+kubectl top pods · kubectl top nodes ⟶ CPU/memory (needs metrics-server)
+## Deployments & rollouts
+kubectl scale deployment web --replicas=5 ⟶ Change replica count
+kubectl set image deployment/web nginx=nginx:1.27 ⟶ Update the image (starts a rollout)
+kubectl rollout status deployment/web ⟶ Watch the rollout
+kubectl rollout history deployment/web ⟶ Previous versions
+kubectl rollout undo deployment/web ⟶ Roll back
+kubectl rollout restart deployment/web ⟶ Restart all pods
+kubectl get replicaset ⟶ ReplicaSets behind deployments
+kubectl describe rs rs-example · kubectl describe ds ds-example ⟶ ReplicaSet / DaemonSet details
+## Config, secrets, storage
+kubectl create configmap literal-example --from-literal="city=Ann Arbor" --from-literal=state=Michigan ⟶ ConfigMap from values
+kubectl create configmap dir-example --from-file=cm/ ⟶ From every file in a folder
+kubectl create configmap file-example --from-file=cm/city --from-file=cm/state ⟶ From specific files
+kubectl create secret generic db-pass --from-literal=password=S3cr3t ⟶ Secret
+kubectl get secret db-pass -o jsonpath='{.data.password}' | base64 -d ⟶ Read a secret value
+kubectl get pv,pvc · kubectl get storageclass ⟶ Storage objects
+## Jobs
+kubectl get jobs · kubectl get cronjobs ⟶ List
+kubectl describe job job-example ⟶ Details and pod status
+kubectl create job manual-run --from=cronjob/cronjob-example ⟶ Run a CronJob now
+</script>
+<script type="text/plain" class="file" data-sec="k8s" data-name="pod.yaml" data-lang="yaml" data-note="Every object needs apiVersion, kind, metadata and spec. Apply: kubectl apply -f pod.yaml">
+apiVersion: v1
+kind: Pod
+metadata:
+  name: web
+  labels:
+    app: web
+spec:
+  containers:
+    - name: nginx
+      image: nginx:1.27
+      ports:
+        - containerPort: 80
+      resources:
+        requests:
+          cpu: "100m"
+          memory: "64Mi"
+        limits:
+          cpu: "250m"
+          memory: "128Mi"
+</script>
+<script type="text/plain" class="file" data-sec="k8s" data-name="namespace.yaml" data-lang="yaml" data-note="Namespaces separate environments or teams. Check: kubectl get ns --show-labels">
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dev
+  labels:
+    env: dev
+</script>
+<script type="text/plain" class="file" data-sec="k8s" data-name="deployment.yaml" data-lang="yaml" data-note="Deployment → ReplicaSet → Pods. Handles rolling updates and rollbacks. The selector must match the template labels.">
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+  labels:
+    app: web
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.27
+          ports:
+            - containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            periodSeconds: 10
+</script>
+<script type="text/plain" class="file" data-sec="k8s" data-name="service.yaml" data-lang="yaml" data-note="Gives pods a stable address. type: ClusterIP (inside the cluster), NodePort (node IP + 30000-32767), LoadBalancer (cloud LB).">
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-svc
+spec:
+  type: NodePort
+  selector:
+    app: web              # sends traffic to pods with this label
+  ports:
+    - port: 80            # service port
+      targetPort: 80      # container port
+      nodePort: 30080     # optional, 30000-32767
+</script>
+<script type="text/plain" class="file" data-sec="k8s" data-name="configmap-secret.yaml" data-lang="yaml" data-note="Config and secrets, and a pod that reads them as env vars and as files. Several objects in one file are separated by ---">
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  city: Ann Arbor
+  state: Michigan
+  app.properties: |
+    log_level=info
+    feature_x=true
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: db-pass
+type: Opaque
+stringData:                # plain text here; stored base64-encoded
+  password: S3cr3t
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: config-demo
+spec:
+  containers:
+    - name: app
+      image: busybox
+      command: ["sh", "-c", "env && cat /etc/config/app.properties && sleep 3600"]
+      envFrom:
+        - configMapRef:
+            name: app-config
+      env:
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-pass
+              key: password
+      volumeMounts:
+        - name: config-vol
+          mountPath: /etc/config
+  volumes:
+    - name: config-vol
+      configMap:
+        name: app-config
+</script>
+<script type="text/plain" class="file" data-sec="k8s" data-name="pv-pvc.yaml" data-lang="yaml" data-note="PersistentVolume (the storage) + PersistentVolumeClaim (a pod's request for it) + a pod that mounts it.">
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-example
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: manual
+  hostPath:
+    path: /mnt/data          # fine for minikube, not for production
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-example
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pvc-demo
+spec:
+  containers:
+    - name: nginx
+      image: nginx:1.27
+      volumeMounts:
+        - name: data
+          mountPath: /usr/share/nginx/html
+  volumes:
+    - name: data
+      persistentVolumeClaim:
+        claimName: pvc-example
+</script>
+<script type="text/plain" class="file" data-sec="k8s" data-name="statefulset.yaml" data-lang="yaml" data-note="For databases: stable names (db-0, db-1) and one volume per pod. Needs a headless service (clusterIP: None).">
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+spec:
+  clusterIP: None
+  selector:
+    app: db
+  ports:
+    - port: 5432
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: db
+spec:
+  serviceName: db
+  replicas: 2
+  selector:
+    matchLabels:
+      app: db
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16-alpine
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-pass
+                  key: password
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: pgdata
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: pgdata
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi
+</script>
+<script type="text/plain" class="file" data-sec="k8s" data-name="daemonset.yaml" data-lang="yaml" data-note="One pod on every node, e.g. a log collector or node-exporter.">
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: node-exporter
+spec:
+  selector:
+    matchLabels:
+      app: node-exporter
+  template:
+    metadata:
+      labels:
+        app: node-exporter
+    spec:
+      containers:
+        - name: node-exporter
+          image: prom/node-exporter:latest
+          ports:
+            - containerPort: 9100
+</script>
+<script type="text/plain" class="file" data-sec="k8s" data-name="job-cronjob.yaml" data-lang="yaml" data-note="Job = run to completion once. CronJob = Job on a schedule. CronJob is batch/v1 now (the course slides show the old batch/v1beta1).">
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: job-example
+spec:
+  backoffLimit: 4
+  completions: 3
+  parallelism: 1
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: hello
+          image: alpine
+          command: ["sh", "-c", "echo Hello from the job; sleep 5"]
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cronjob-example
+spec:
+  schedule: "*/1 * * * *"          # every minute
+  successfulJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: hello
+              image: alpine
+              command: ["sh", "-c", "date; echo Hello from the CronJob"]
+</script>
+<script type="text/plain" class="docs" data-sec="k8s">
+Kubernetes documentation ⟶ https://kubernetes.io/docs/home/ ⟶ Start page
+kubectl quick reference ⟶ https://kubernetes.io/docs/reference/kubectl/quick-reference/ ⟶ Official cheat sheet
+Concepts: workloads ⟶ https://kubernetes.io/docs/concepts/workloads/ ⟶ Pods, Deployments, StatefulSets, Jobs
+Services ⟶ https://kubernetes.io/docs/concepts/services-networking/service/ ⟶ ClusterIP, NodePort, LoadBalancer
+Persistent volumes ⟶ https://kubernetes.io/docs/concepts/storage/persistent-volumes/ ⟶ PV, PVC, StorageClass
+ConfigMaps ⟶ https://kubernetes.io/docs/concepts/configuration/configmap/ ⟶ App config
+Secrets ⟶ https://kubernetes.io/docs/concepts/configuration/secret/ ⟶ Passwords and tokens
+API reference ⟶ https://kubernetes.io/docs/reference/kubernetes-api/ ⟶ Every field of every kind
+Install tools (kubectl) ⟶ https://kubernetes.io/docs/tasks/tools/ ⟶ kubectl, kind, minikube
+minikube start ⟶ https://minikube.sigs.k8s.io/docs/start/ ⟶ Local cluster
+</script>
+
+<!-- ============ PROMETHEUS ============ -->
+<script type="text/plain" class="cmds" data-sec="prom">
+## Install Prometheus as a service (course steps)
+sudo useradd --no-create-home --shell /bin/false prometheus ⟶ Service user
+sudo mkdir /etc/prometheus /var/lib/prometheus ⟶ Config and data folders
+sudo chown prometheus:prometheus /etc/prometheus /var/lib/prometheus ⟶ Give them to that user
+wget https://github.com/prometheus/prometheus/releases/download/v<ver>/prometheus-<ver>.linux-amd64.tar.gz ⟶ Download (get the current version from prometheus.io/download)
+tar -xvf prometheus-*.linux-amd64.tar.gz && cd prometheus-*/ ⟶ Extract
+sudo cp prometheus promtool /usr/local/bin/ ⟶ Install the binaries
+sudo chown prometheus:prometheus /usr/local/bin/prometheus /usr/local/bin/promtool ⟶ Ownership
+sudo cp prometheus.yml /etc/prometheus/ && sudo chown prometheus:prometheus /etc/prometheus/prometheus.yml ⟶ Config file
+sudo systemctl daemon-reload && sudo systemctl enable --now prometheus ⟶ Start (after creating the unit file below)
+http://localhost:9090 ⟶ Prometheus UI → Status → Targets
+## Node exporter (server metrics)
+sudo useradd --no-create-home --shell /bin/false node_exporter ⟶ Service user
+sudo cp node_exporter /usr/local/bin && sudo chown node_exporter:node_exporter /usr/local/bin/node_exporter ⟶ Install
+sudo systemctl daemon-reload && sudo systemctl enable --now node_exporter ⟶ Start
+curl localhost:9100/metrics ⟶ See raw metrics
+## Check & reload
+promtool check config /etc/prometheus/prometheus.yml ⟶ Validate the config
+promtool check rules /etc/prometheus/alert.rules.yml ⟶ Validate alert rules
+sudo systemctl restart prometheus ⟶ Apply config changes
+curl -X POST http://localhost:9090/-/reload ⟶ Reload without restart (needs --web.enable-lifecycle)
+## Grafana
+http://localhost:3000 ⟶ Grafana UI (first login admin / admin)
+Connections → Data sources → Prometheus → http://prometheus:9090 ⟶ Use http://localhost:9090 when not in Docker Compose
+Dashboards → Import → ID 1860 ⟶ Ready "Node Exporter Full" dashboard
+## PromQL
+up ⟶ 1 = target reachable, 0 = down
+up{job="node"} ⟶ Filter by label
+node_memory_MemAvailable_bytes ⟶ A raw metric
+rate(node_network_receive_bytes_total[5m]) ⟶ Per-second rate over 5 minutes (for counters)
+100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) ⟶ CPU usage %
+(1 - node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) * 100 ⟶ Memory usage %
+100 - (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"} * 100) ⟶ Disk usage %
+rate(prometheus_engine_query_duration_seconds_sum[1m]) ⟶ Course lab query
+sum by (job) (rate(http_requests_total[5m])) ⟶ Requests per second per job
+topk(5, rate(node_cpu_seconds_total[5m])) ⟶ Top 5 series
+</script>
+<script type="text/plain" class="file" data-sec="prom" data-name="prometheus.yml" data-lang="yaml" data-note="What to scrape and how often. Location: /etc/prometheus/prometheus.yml (or mounted into the container).">
+global:
+  scrape_interval: 15s        # how often to scrape (default 1m)
+  evaluation_interval: 15s    # how often to check alert rules
+
+rule_files:
+  - "alert.rules.yml"
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ["alertmanager:9093"]   # localhost:9093 without Docker
+
+scrape_configs:
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  - job_name: "node"
+    static_configs:
+      - targets: ["node-exporter:9100"]    # or <server-ip>:9100
+        labels:
+          env: "lab"
+</script>
+<script type="text/plain" class="file" data-sec="prom" data-name="alert.rules.yml" data-lang="yaml" data-note="When to fire an alert. Check with promtool check rules alert.rules.yml">
+groups:
+  - name: node-alerts
+    rules:
+      - alert: InstanceDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "{{ $labels.instance }} is down"
+          description: "{{ $labels.job }} target has been unreachable for 1 minute."
+
+      - alert: HighCpuUsage
+        expr: 100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "CPU above 80% on {{ $labels.instance }}"
+
+      - alert: DiskAlmostFull
+        expr: node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"} < 0.10
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Less than 10% disk left on {{ $labels.instance }}"
+</script>
+<script type="text/plain" class="file" data-sec="prom" data-name="alertmanager.yml" data-lang="yaml" data-note="Where alerts go: grouping, routing, receivers (email here; Slack and others work the same way).">
+global:
+  smtp_smarthost: "smtp.gmail.com:587"
+  smtp_from: "alertmanager@example.org"
+  smtp_auth_username: "alertmanager@example.org"
+  smtp_auth_password: "app-password-here"
+
+route:
+  receiver: team-email
+  group_by: ["alertname", "instance"]
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 3h
+
+receivers:
+  - name: team-email
+    email_configs:
+      - to: "team-X+alerts@example.org"
+
+# Silence warnings for an instance that already has a critical alert
+inhibit_rules:
+  - source_matchers: [severity="critical"]
+    target_matchers: [severity="warning"]
+    equal: ["instance"]
+</script>
+<script type="text/plain" class="file" data-sec="prom" data-name="/etc/systemd/system/prometheus.service" data-lang="ini" data-note="Unit file from the course. Then: sudo systemctl daemon-reload && sudo systemctl enable --now prometheus">
+[Unit]
+Description=Prometheus
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=prometheus
+Group=prometheus
+Type=simple
+ExecStart=/usr/local/bin/prometheus \
+    --config.file /etc/prometheus/prometheus.yml \
+    --storage.tsdb.path /var/lib/prometheus/ \
+    --web.enable-lifecycle
+
+[Install]
+WantedBy=multi-user.target
+</script>
+<script type="text/plain" class="file" data-sec="prom" data-name="/etc/systemd/system/node_exporter.service" data-lang="ini" data-note="Exposes server metrics on port 9100.">
+[Unit]
+Description=Node Exporter
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=node_exporter
+Group=node_exporter
+Type=simple
+ExecStart=/usr/local/bin/node_exporter
+
+[Install]
+WantedBy=multi-user.target
+</script>
+<script type="text/plain" class="file" data-sec="prom" data-name="docker-compose.yml (monitoring stack)" data-lang="yaml" data-note="Prometheus + Node Exporter + Alertmanager + Grafana in one command: docker compose up -d. Put the config files in ./prometheus and ./alertmanager.">
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus/alert.rules.yml:/etc/prometheus/alert.rules.yml:ro
+      - prom-data:/prometheus
+    ports:
+      - "9090:9090"
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    ports:
+      - "9100:9100"
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    volumes:
+      - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+    ports:
+      - "9093:9093"
+
+  grafana:
+    image: grafana/grafana:latest
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    volumes:
+      - grafana-data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    depends_on: [prometheus]
+
+volumes:
+  prom-data:
+  grafana-data:
+</script>
+<script type="text/plain" class="docs" data-sec="prom">
+Prometheus overview ⟶ https://prometheus.io/docs/introduction/overview/ ⟶ Architecture and concepts
+Configuration ⟶ https://prometheus.io/docs/prometheus/latest/configuration/configuration/ ⟶ prometheus.yml options
+PromQL basics ⟶ https://prometheus.io/docs/prometheus/latest/querying/basics/ ⟶ Selectors, ranges, functions
+PromQL functions ⟶ https://prometheus.io/docs/prometheus/latest/querying/functions/ ⟶ rate, sum, topk…
+Alerting rules ⟶ https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/ ⟶ Rule files
+Alertmanager config ⟶ https://prometheus.io/docs/alerting/latest/configuration/ ⟶ Routes and receivers
+Downloads ⟶ https://prometheus.io/download/ ⟶ Current versions of every binary
+Node exporter ⟶ https://github.com/prometheus/node_exporter ⟶ Server metrics
+Pushgateway ⟶ https://github.com/prometheus/pushgateway ⟶ For batch jobs
+Grafana docs ⟶ https://grafana.com/docs/grafana/latest/ ⟶ Dashboards and data sources
+Grafana dashboards library ⟶ https://grafana.com/grafana/dashboards/ ⟶ Import ready dashboards
+</script>
+
+<!-- ============ WEB SERVERS ============ -->
+<script type="text/plain" class="cmds" data-sec="web">
+## Nginx
+sudo apt install -y nginx ⟶ Install (Ubuntu)
+sudo yum install -y epel-release && sudo yum install -y nginx ⟶ Install (RHEL/CentOS)
+sudo nginx -t ⟶ Test the config (always before reload)
+sudo systemctl reload nginx ⟶ Apply config without dropping connections
+nginx -h · nginx -V ⟶ Help · version and build options
+/etc/nginx/nginx.conf ⟶ Main config file
+/etc/nginx/sites-available/ → sites-enabled/ ⟶ Site files (Ubuntu); /etc/nginx/conf.d/*.conf on RHEL
+sudo ln -s /etc/nginx/sites-available/mysite /etc/nginx/sites-enabled/ ⟶ Enable a site
+sudo rm /etc/nginx/sites-enabled/default ⟶ Disable the default site
+/var/log/nginx/access.log · error.log ⟶ Logs
+## Apache
+sudo apt install -y apache2 / sudo yum install -y httpd ⟶ Install (Ubuntu / RHEL)
+sudo apachectl configtest ⟶ Test the config
+sudo systemctl restart apache2 ⟶ Restart (service is httpd on RHEL)
+sudo a2ensite mysite.conf · sudo a2dissite 000-default.conf ⟶ Enable / disable a site (Ubuntu)
+sudo a2enmod rewrite headers proxy proxy_http ⟶ Enable modules
+/etc/apache2/apache2.conf · /etc/httpd/conf/httpd.conf ⟶ Main config (Ubuntu · RHEL)
+/var/www/html ⟶ Web root on both
+sudo htpasswd -c /etc/apache2/.htpasswd username ⟶ Create password file (-c only the first time; apache2-utils)
+## HTTPS (Let's Encrypt)
+sudo apt install -y certbot python3-certbot-nginx ⟶ Install certbot
+sudo certbot --nginx -d example.com -d www.example.com ⟶ Get a certificate and configure Nginx
+sudo certbot renew --dry-run ⟶ Test auto-renewal
+</script>
+<script type="text/plain" class="file" data-sec="web" data-name="/etc/nginx/nginx.conf (contexts)" data-lang="nginx" data-note="The six contexts from the course and how they nest.">
+# main context: settings for the whole server
+user www-data;
+worker_processes auto;
+pid /run/nginx.pid;
+
+events {
+    # events context: how connections are handled
+    worker_connections 1024;
+}
+
+http {
+    # http context: everything about HTTP
+    include /etc/nginx/mime.types;
+    access_log /var/log/nginx/access.log;
+    error_log  /var/log/nginx/error.log;
+
+    upstream backend {
+        # upstream context: pool of servers to proxy to
+        server 127.0.0.1:3000;
+    }
+
+    server {
+        # server context: one site (domain / port)
+        listen 80;
+        server_name example.com;
+
+        location / {
+            # location context: what to do for matching URLs
+            proxy_pass http://backend;
+        }
+    }
+
+    include /etc/nginx/conf.d/*.conf;
+    include /etc/nginx/sites-enabled/*;
+}
+</script>
+<script type="text/plain" class="file" data-sec="web" data-name="/etc/nginx/sites-available/lab" data-lang="nginx" data-note="Course lab: custom default page, and two sites on ports 81 and 82. Enable with ln -s into sites-enabled, then nginx -t and reload.">
+server {
+    listen 81;
+    server_name _;
+    root /var/www/site1;
+    index yourname.html;              # default page instead of index.html
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}
+
+server {
+    listen 82;
+    server_name _;
+    root /var/www/site2;
+    index page2.html;
+}
+</script>
+<script type="text/plain" class="file" data-sec="web" data-name="/etc/nginx/sites-available/app" data-lang="nginx" data-note="Reverse proxy: Nginx on port 80 forwards to your app on 3000 and serves static files itself.">
+server {
+    listen 80;
+    server_name example.com www.example.com;
+
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /static/ {
+        alias /var/www/app/static/;
+        expires 7d;
+    }
+
+    access_log /var/log/nginx/app_access.log;
+    error_log  /var/log/nginx/app_error.log;
+}
+</script>
+<script type="text/plain" class="file" data-sec="web" data-name="/etc/nginx/conf.d/lb.conf" data-lang="nginx" data-note="Course lab: load balancer across servers. Round-robin by default.">
+upstream backend {
+    # least_conn;     # send to the server with fewest connections
+    # ip_hash;        # same client always goes to the same server
+    server 192.168.1.10:80;
+    server 192.168.1.11:80;
+    server 192.168.1.12:80 backup;
+}
+
+server {
+    listen 80;
+
+    location / {
+        proxy_pass http://backend;
+        proxy_set_header Host $host;
+    }
+}
+</script>
+<script type="text/plain" class="file" data-sec="web" data-name="/etc/apache2/sites-available/mysite.conf" data-lang="apache" data-note="Course Apache lab in one virtual host: default.html as index, redirect page1 → page2, no directory listing, password-protected folder. Apache comments must be on their own line. Enable: sudo a2ensite mysite.conf && sudo systemctl reload apache2">
+<VirtualHost *:80>
+    ServerName mysite.local
+    DocumentRoot /var/www/html
+
+    # Use default.html instead of index.html
+    DirectoryIndex default.html
+
+    # Redirect page1 to page2
+    Redirect 301 /page1.html /page2.html
+
+    <Directory /var/www/html>
+        # -Indexes = don't list folder contents
+        Options -Indexes
+        # Allow .htaccess files to change settings
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    # Only one classmate may open /private
+    <Directory /var/www/html/private>
+        AuthType Basic
+        AuthName "Restricted area"
+        AuthUserFile /etc/apache2/.htpasswd
+        Require user classmate
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+</script>
+<script type="text/plain" class="file" data-sec="web" data-name=".htaccess" data-lang="apache" data-note="Per-folder password protection (needs AllowOverride All). Create users with htpasswd.">
+AuthType Basic
+AuthName "Restricted web page"
+AuthUserFile /var/www/html/.htpasswd
+Require valid-user
+</script>
+<script type="text/plain" class="docs" data-sec="web">
+Nginx documentation ⟶ https://nginx.org/en/docs/ ⟶ Official docs
+Nginx beginner's guide ⟶ https://nginx.org/en/docs/beginners_guide.html ⟶ Config structure
+Nginx load balancing ⟶ https://nginx.org/en/docs/http/load_balancing.html ⟶ upstream methods
+Nginx directive index ⟶ https://nginx.org/en/docs/dirindex.html ⟶ Every directive
+Apache 2.4 docs ⟶ https://httpd.apache.org/docs/2.4/ ⟶ Official docs
+Apache virtual hosts ⟶ https://httpd.apache.org/docs/2.4/vhosts/examples.html ⟶ VirtualHost examples
+Apache .htaccess guide ⟶ https://httpd.apache.org/docs/2.4/howto/htaccess.html ⟶ When and how
+Apache auth ⟶ https://httpd.apache.org/docs/2.4/howto/auth.html ⟶ Passwords and access
+Certbot instructions ⟶ https://certbot.eff.org/instructions ⟶ Free HTTPS certificates
+</script>
+
+<!-- ============ AWS ============ -->
+<script type="text/plain" class="cmds" data-sec="aws">
+## AWS CLI setup
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o awscliv2.zip && unzip awscliv2.zip && sudo ./aws/install ⟶ Install CLI v2 (Linux)
+aws configure ⟶ Access key, secret key, region (e.g. us-east-1), output (json)
+aws configure --profile dev · aws s3 ls --profile dev ⟶ Several accounts
+aws sts get-caller-identity ⟶ Which account and user am I?
+## EC2
+aws ec2 describe-instances --query "Reservations[].Instances[].[InstanceId,State.Name,PublicIpAddress]" --output table ⟶ Your instances as a table
+aws ec2 run-instances --image-id <ami-id> --instance-type t2.micro --key-name mykey --security-group-ids <sg-id> --user-data file://user-data.sh ⟶ Launch an instance
+aws ec2 start-instances / stop-instances / terminate-instances --instance-ids <id> ⟶ Lifecycle
+aws ec2 create-key-pair --key-name mykey --query KeyMaterial --output text > mykey.pem && chmod 400 mykey.pem ⟶ New SSH key pair
+aws ec2 authorize-security-group-ingress --group-id <sg-id> --protocol tcp --port 22 --cidr <your-ip>/32 ⟶ Open a port
+aws ec2 create-snapshot --volume-id <vol-id> --description "backup" ⟶ EBS snapshot
+aws ec2 create-image --instance-id <id> --name "my-ami" ⟶ AMI from an instance
+aws ec2 describe-vpcs · describe-subnets · describe-security-groups ⟶ Network info
+## S3
+aws s3 ls · aws s3 ls s3://<bucket> ⟶ Buckets · objects
+aws s3 mb s3://<bucket> ⟶ Make a bucket (name must be globally unique)
+aws s3 cp file.txt s3://<bucket>/ · aws s3 cp s3://<bucket>/file.txt . ⟶ Upload · download
+aws s3 sync ./site s3://<bucket> ⟶ Upload only changed files
+aws s3 rm s3://<bucket>/file.txt · aws s3 rb s3://<bucket> --force ⟶ Delete object · delete bucket
+## Load balancing & Auto Scaling
+aws elbv2 describe-load-balancers ⟶ Your load balancers
+aws elbv2 describe-target-health --target-group-arn <arn> ⟶ Are targets healthy?
+aws autoscaling describe-auto-scaling-groups ⟶ Your ASGs
+aws autoscaling set-desired-capacity --auto-scaling-group-name my-asg --desired-capacity 3 ⟶ Scale by hand
+## IAM & CloudWatch
+aws iam list-users ⟶ Users
+aws iam create-user --user-name dev ⟶ New user
+aws iam attach-user-policy --user-name dev --policy-arn arn:aws:iam::aws:policy/ReadOnlyAccess ⟶ Attach a managed policy
+aws cloudwatch list-metrics --namespace AWS/EC2 ⟶ Available EC2 metrics
+## Services from the course
+EC2 · AMI · EBS · Snapshot ⟶ Virtual servers · server image · disk · disk backup
+VPC · Subnet · Internet Gateway · NAT Gateway ⟶ Private network · IP range in one AZ · internet access · outbound-only internet for private subnets
+Security Group · Network ACL ⟶ Stateful firewall per instance · stateless firewall per subnet
+ELB (ALB / NLB) · Auto Scaling Group ⟶ Spread traffic · add/remove instances by load
+S3 · CloudFront · Route 53 ⟶ Object storage · CDN · DNS
+IAM · CloudWatch · CloudFormation ⟶ Users and permissions · metrics and alarms · infrastructure as code
+RDS · DynamoDB · Lambda · ECS / EKS ⟶ Managed SQL · NoSQL · serverless functions · containers
+</script>
+<script type="text/plain" class="file" data-sec="aws" data-name="user-data.sh" data-lang="bash" data-note="Runs once when an EC2 instance first boots. Paste it into Advanced details → User data, or pass it with --user-data / Terraform.">
+#!/bin/bash
+apt-get update -y
+apt-get install -y nginx
+echo "<h1>Hello from $(hostname -f)</h1>" > /var/www/html/index.html
+systemctl enable --now nginx
+</script>
+<script type="text/plain" class="file" data-sec="aws" data-name="s3-read-policy.json" data-lang="json" data-note="IAM policy: read-only access to one bucket. Attach it to a user, group or EC2 role.">
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ListBucket",
+      "Effect": "Allow",
+      "Action": "s3:ListBucket",
+      "Resource": "arn:aws:s3:::my-app-bucket"
+    },
+    {
+      "Sid": "ReadObjects",
+      "Effect": "Allow",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::my-app-bucket/*"
+    }
+  ]
+}
+</script>
+<script type="text/plain" class="docs" data-sec="aws">
+AWS documentation ⟶ https://docs.aws.amazon.com/ ⟶ All services
+AWS CLI user guide ⟶ https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html ⟶ Install and configure
+AWS CLI command reference ⟶ https://docs.aws.amazon.com/cli/latest/ ⟶ Every aws command
+EC2 user guide ⟶ https://docs.aws.amazon.com/ec2/ ⟶ Instances, AMIs, EBS
+VPC user guide ⟶ https://docs.aws.amazon.com/vpc/ ⟶ Subnets, gateways, routing
+Auto Scaling ⟶ https://docs.aws.amazon.com/autoscaling/ ⟶ Scaling groups and policies
+Elastic Load Balancing ⟶ https://docs.aws.amazon.com/elasticloadbalancing/ ⟶ ALB, NLB
+IAM policy elements ⟶ https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements.html ⟶ Write policies
+Well-Architected Framework ⟶ https://aws.amazon.com/architecture/well-architected/ ⟶ Cloud architecture design
+AWS Free Tier ⟶ https://aws.amazon.com/free/ ⟶ What you can use for free
+</script>
+
+<!-- ============ TERRAFORM ============ -->
+<script type="text/plain" class="cmds" data-sec="tf">
+## Main workflow
+terraform -v ⟶ Installed version
+terraform init ⟶ Download providers and set up the backend (run first, and after adding modules)
+terraform fmt -recursive ⟶ Format all .tf files
+terraform validate ⟶ Check syntax and references
+terraform plan ⟶ Preview what will change
+terraform plan -out=tfplan && terraform apply tfplan ⟶ Apply exactly the plan you reviewed
+terraform apply ⟶ Create/update (asks for yes)
+terraform apply -auto-approve ⟶ No prompt (CI pipelines)
+terraform apply -var="name=foo" ⟶ Set a variable
+terraform apply -var-file=prod.tfvars ⟶ Variables from a file
+terraform destroy ⟶ Delete everything in this configuration
+terraform output · terraform output -raw public_ip ⟶ Show outputs
+## State
+terraform state list ⟶ Resources Terraform manages
+terraform state show aws_instance.web[0] ⟶ Details of one resource
+terraform state rm <address> ⟶ Stop managing (doesn't delete the real resource)
+terraform import aws_instance.web <instance-id> ⟶ Bring an existing resource under Terraform
+terraform apply -refresh-only ⟶ Sync state with reality (old: terraform refresh)
+terraform init -migrate-state ⟶ Move state after adding/changing a backend
+## Workspaces & modules
+terraform workspace new dev · select dev · list ⟶ Separate state per environment
+terraform get -update ⟶ Update modules
+terraform init -upgrade ⟶ Upgrade providers within version limits
+## Other
+terraform console ⟶ Try expressions interactively
+terraform providers ⟶ Providers in use
+terraform graph | dot -Tpng > graph.png ⟶ Dependency graph image (needs graphviz)
+</script>
+<script type="text/plain" class="file" data-sec="tf" data-name="project layout" data-lang="plain" data-note="The vars.tf / main.tf / outputs.tf split from the course, plus one folder per environment so each has its own state.">
+infra/
+├── modules/
+│   └── web/
+│       ├── main.tf
+│       ├── variables.tf
+│       └── outputs.tf
+├── stage/
+│   ├── main.tf          # module "web" { source = "../modules/web" ... }
+│   ├── backend.tf
+│   └── terraform.tfvars
+└── prod/
+    ├── main.tf
+    ├── backend.tf
+    └── terraform.tfvars
+</script>
+<script type="text/plain" class="file" data-sec="tf" data-name="variables.tf" data-lang="hcl" data-note="Inputs. Set them with defaults, terraform.tfvars, -var or -var-file.">
+variable "region" {
+  description = "AWS region"
+  type        = string
+  default     = "us-east-1"
+}
+
+variable "name" {
+  description = "Name prefix for every resource"
+  type        = string
+  default     = "devops-lab"
+}
+
+variable "instance_type" {
+  type    = string
+  default = "t2.micro"
+}
+
+variable "instance_count" {
+  type    = number
+  default = 2
+}
+
+variable "port" {
+  type    = number
+  default = 80
+}
+</script>
+<script type="text/plain" class="file" data-sec="tf" data-name="main.tf" data-lang="hcl" data-note="Provider, an AMI lookup, a security group and N EC2 instances with count and Elastic IPs.">
+terraform {
+  required_version = ">= 1.6"
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 5.0"
+    }
+  }
+}
+
+provider "aws" {
+  region = var.region
+}
+
+# Latest Ubuntu 24.04 image from Canonical
+data "aws_ami" "ubuntu" {
+  most_recent = true
+  owners      = ["099720109477"]
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-*"]
+  }
+}
+
+resource "aws_security_group" "web" {
+  name        = "${var.name}-web-sg"
+  description = "Allow HTTP and SSH"
+
+  ingress {
+    from_port   = var.port
+    to_port     = var.port
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]   # better: your own IP/32
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_instance" "web" {
+  count                  = var.instance_count
+  ami                    = data.aws_ami.ubuntu.id
+  instance_type          = var.instance_type
+  vpc_security_group_ids = [aws_security_group.web.id]
+  user_data              = file("${path.module}/user-data.sh")
+
+  tags = {
+    Name = "${var.name}-${count.index}"
+  }
+}
+
+resource "aws_eip" "web" {
+  count    = var.instance_count
+  instance = aws_instance.web[count.index].id
+  domain   = "vpc"
+}
+</script>
+<script type="text/plain" class="file" data-sec="tf" data-name="outputs.tf" data-lang="hcl" data-note="Values printed after apply and readable with terraform output.">
+output "public_ips" {
+  value = aws_eip.web[*].public_ip
+}
+
+output "url" {
+  value = "http://${aws_eip.web[0].public_ip}:${var.port}"
+}
+
+output "all_instance_ids" {
+  value = aws_instance.web[*].id
+}
+</script>
+<script type="text/plain" class="file" data-sec="tf" data-name="terraform.tfvars" data-lang="hcl" data-note="Loaded automatically. Use prod.tfvars etc. with -var-file for other environments.">
+region         = "us-east-1"
+name           = "my-lab"
+instance_type  = "t3.micro"
+instance_count = 2
+</script>
+<script type="text/plain" class="file" data-sec="tf" data-name="backend.tf" data-lang="hcl" data-note="Keep state in S3 so a team shares one state. Create the bucket first, then terraform init -migrate-state. This replaces the course's old terraform remote config command.">
+terraform {
+  backend "s3" {
+    bucket       = "my-terraform-state-bucket"
+    key          = "stage/web/terraform.tfstate"
+    region       = "us-east-1"
+    encrypt      = true
+    use_lockfile = true      # state locking (Terraform 1.10+); older setups use a DynamoDB table
+  }
+}
+</script>
+<script type="text/plain" class="file" data-sec="tf" data-name="stage/main.tf (using a module)" data-lang="hcl" data-note="Same module, different inputs per environment. Run terraform init after adding a module.">
+module "web" {
+  source = "../modules/web"
+
+  name           = "web-stage"
+  instance_type  = "t3.micro"
+  instance_count = 1
+}
+
+output "stage_url" {
+  value = module.web.url
+}
+</script>
+<script type="text/plain" class="file" data-sec="tf" data-name="conditional-and-loops.tf" data-lang="hcl" data-note="count as an if-statement (from the course), plus for_each, which is better when items have names.">
+# "If" with count: create the instance only when the flag is true
+variable "should_create_instance" {
+  type    = bool
+  default = true
+}
+
+resource "aws_instance" "optional" {
+  count         = var.should_create_instance ? 1 : 0
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = "t2.micro"
+}
+
+# for_each: one bucket per name
+variable "buckets" {
+  type    = set(string)
+  default = ["logs", "backups", "assets"]
+}
+
+resource "aws_s3_bucket" "this" {
+  for_each = var.buckets
+  bucket   = "myproject-${each.key}-bucket"
+}
+</script>
+<script type="text/plain" class="docs" data-sec="tf">
+Terraform docs ⟶ https://developer.hashicorp.com/terraform/docs ⟶ Start page
+CLI commands ⟶ https://developer.hashicorp.com/terraform/cli/commands ⟶ init, plan, apply, state…
+Configuration language ⟶ https://developer.hashicorp.com/terraform/language ⟶ Resources, variables, modules
+AWS get-started tutorial ⟶ https://developer.hashicorp.com/terraform/tutorials/aws-get-started ⟶ Hands-on track
+AWS provider docs ⟶ https://registry.terraform.io/providers/hashicorp/aws/latest/docs ⟶ Every AWS resource
+S3 backend ⟶ https://developer.hashicorp.com/terraform/language/backend/s3 ⟶ Remote state and locking
+Modules ⟶ https://developer.hashicorp.com/terraform/language/modules ⟶ Reusable building blocks
+Terraform Registry ⟶ https://registry.terraform.io/ ⟶ Providers and public modules
+</script>
+
+<script>
+(function(){
+  "use strict";
+  var SECTIONS = [
+    {id:"linux",   cat:"Linux",        title:"Linux essentials",        src:"S01–04 DevOps Essentials", intro:"Moving around, help, system info. The commands you type a hundred times a day."},
+    {id:"files",   cat:"Linux",        title:"Files & folders",         src:"S01–04 DevOps Essentials", intro:"Create, copy, move, find and archive files, plus the folders that matter on every server."},
+    {id:"text",    cat:"Linux",        title:"Text, pipes & redirection", src:"S01–04 DevOps Essentials", intro:"Search and reshape output and logs. Chaining these with | is most of daily troubleshooting."},
+    {id:"perms",   cat:"Linux",        title:"Permissions",             src:"S01–04 DevOps Essentials", intro:"Who can read, write and run a file. Wrong permissions break SSH keys, web roots and scripts."},
+    {id:"users",   cat:"Linux",        title:"Users & groups",          src:"Linux Lec 1: User Management", intro:"Root, standard and sudo users, groups, and the files that store them."},
+    {id:"procs",   cat:"Linux",        title:"Processes, services & logs", src:"S01–04 · S21–24", intro:"See what's running, control services with systemctl, read logs with journalctl, schedule with cron."},
+    {id:"pkgs",    cat:"Linux",        title:"Packages",                src:"S01–04 DevOps Essentials", intro:"Install software on Ubuntu/Debian (apt, dpkg) and RHEL/CentOS/Amazon Linux (yum, dnf)."},
+    {id:"net",     cat:"Linux",        title:"Networking & SSH",        src:"S01–04 · S05–08", intro:"IPs, DNS, ports, HTTP tests, firewall, and SSH keys (Ansible and every cloud server depend on them)."},
+    {id:"storage", cat:"Linux",        title:"Storage, LVM & swap",     src:"Linux Lec 2: Storage Management", intro:"Partition, format and mount disks; grow storage with LVM; add swap."},
+    {id:"bash",    cat:"Linux",        title:"Bash scripting",          src:"S01–04 DevOps Essentials", intro:"Automate repeated steps. Variables, conditions, loops and functions."},
+    {id:"git",     cat:"Source control", title:"Git & GitHub",          src:"Git · S30–31 Git and GitHub", intro:"Track changes, branch, merge and push to GitHub. CI/CD pipelines start from a Git push."},
+    {id:"docker",  cat:"Containers",   title:"Docker",                  src:"S09–14 Docker", intro:"Build images, run containers, persist data with volumes, connect containers with networks."},
+    {id:"compose", cat:"Containers",   title:"Docker Compose",          src:"S12 Docker 3", intro:"Define a multi-container app in one YAML file and run it with one command.",
+       note:"The course installs the old <code>docker-compose</code> (v1, with a hyphen). Current Docker uses <code>docker compose</code> (v2, with a space); both take the same files. The top-level <code>version:</code> line is now ignored, so you can drop it."},
+    {id:"ansible", cat:"Automation",   title:"Ansible",                 src:"S05–08 Ansible", intro:"Agentless configuration management over SSH. Inventory says where, playbooks say what, modules do the work."},
+    {id:"cicd",    cat:"CI/CD",        title:"Jenkins & CI/CD",         src:"S15 CI/CD · S16 Jenkins", intro:"Build, test and deploy on every push. Jenkinsfile for Jenkins; CI and deploy workflows for GitHub Actions (direct SSH or through Ansible).",
+       note:"The course's <code>triggers { scm { name … urls … } }</code> block is not valid declarative syntax and fails. Use <code>pollSCM('H/5 * * * *')</code> or a GitHub webhook, and check out the repo with the <code>git</code> step, as in the Jenkinsfile below."},
+    {id:"k8s",     cat:"Orchestration", title:"Kubernetes",             src:"S17–20 Intro to Kubernetes", intro:"Run containers across a cluster: Pods, Deployments, Services, storage, config and jobs."},
+    {id:"prom",    cat:"Monitoring",   title:"Prometheus & Grafana",    src:"S21–24 Monitoring with Prometheus", intro:"Scrape metrics, query them with PromQL, alert through Alertmanager and graph in Grafana."},
+    {id:"web",     cat:"Web servers",  title:"Nginx & Apache",          src:"S25–26 Web Server Configurations", intro:"Serve sites, reverse proxy to apps, load balance, password-protect folders, add HTTPS.",
+       note:"Apache 2.4 uses <code>Require</code> for access control. The older <code>Allow</code> / <code>Deny</code> directives from the slides are Apache 2.2 syntax."},
+    {id:"aws",     cat:"Cloud",        title:"AWS",                     src:"S27 AWS · S28–29 Cloud Architecture", intro:"The AWS CLI for EC2, S3, load balancers, Auto Scaling and IAM, plus a one-line map of the services from the course."},
+    {id:"tf",      cat:"Infrastructure as Code", title:"Terraform",     src:"S32–34 Terraform", intro:"Describe infrastructure in .tf files; plan, apply and destroy it repeatably.",
+       note:"Some slides use pre-0.12 syntax: <code>\"${var.name}\"</code> on its own is now just <code>var.name</code> (keep <code>${}</code> only inside strings), <code>tags { }</code> is now <code>tags = { }</code>, and <code>terraform remote config</code> was replaced by a <code>backend</code> block. The files below use current syntax."}
+  ];
+  var ARROW = " ⟶ ";
+  function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+  function escPh(s){ // escape and mark <placeholders>
+    return esc(s).replace(/&lt;([a-z][\w\-./@ ]*?)&gt;/gi,'<span class="ph">&lt;$1&gt;</span>');
+  }
+  function trimBlock(t){ return t.replace(/^\s*\n/,"").replace(/\s+$/,""); }
+
+  /* ---------- tiny syntax highlighter ---------- */
+  var KW = {
+    docker:"FROM|AS|WORKDIR|COPY|ADD|RUN|ENV|ARG|EXPOSE|USER|VOLUME|CMD|ENTRYPOINT|HEALTHCHECK|LABEL|SHELL|ONBUILD|STOPSIGNAL",
+    hcl:"terraform|provider|resource|variable|output|module|data|locals|backend|required_providers|ingress|egress|filter|true|false|null|count|for_each|each|var|path",
+    groovy:"pipeline|agent|any|triggers|environment|stages|stage|steps|post|always|success|failure|when|script|parameters|options|withCredentials|usernamePassword|sh|git|junit|echo|cleanWs|archiveArtifacts|pollSCM",
+    bash:"if|then|elif|else|fi|for|in|do|done|while|case|esac|function|local|return|exit|read|echo|set|export|readonly|unset",
+    yaml:"true|false|null",
+    nginx:"",apache:"",ini:"",json:"true|false|null",plain:""
+  };
+  function commentStart(line, lang){
+    var inS=false,inD=false;
+    for (var i=0;i<line.length;i++){
+      var c=line[i];
+      if (c==="'" && !inD && lang!=="nginx") inS=!inS;
+      else if (c==='"' && !inS) inD=!inD;
+      else if (!inS && !inD){
+        if (c==="#" && lang!=="json" && lang!=="groovy" && (i===0 || /\s/.test(line[i-1]))) {
+          if (lang==="bash" && i===0 && line[1]==="!") return -1;
+          return i;
+        }
+        if (c==="/" && line[i+1]==="/" && (lang==="groovy"||lang==="hcl"||lang==="json") && (i===0 || line[i-1]!==":")) return i;
+      }
+    }
+    return -1;
+  }
+  function hlCode(code, lang){
+    var kw = KW[lang] ? new RegExp("^(?:"+KW[lang]+")$") : null;
+    var tok = /("(?:[^"\\]|\\.)*"|'[^'\n]*')|(\$\{\{[^}]*\}\}|\{\{[^}]*\}\}|\$\{[^}]*\}|\$[A-Za-z_][\w]*|\$[0-9#@?$])|(\b\d+(?:\.\d+)?\b)|([A-Za-z_][\w\-]*)/g;
+    var out = "", last = 0, m;
+    while ((m = tok.exec(code))){
+      out += esc(code.slice(last, m.index));
+      if (m[1]) {
+        // keep ${…} / {{…}} highlighted inside strings
+        var inner = esc(m[1]).replace(/(\$\{\{[^}]*\}\}|\{\{[^}]*\}\}|\$\{[^}]*\}|\$[A-Za-z_]\w*)/g,'<span class="t-var">$1</span>');
+        out += (lang==="bash" && m[1][0]==="'") ? '<span class="t-str">'+esc(m[1])+'</span>' : '<span class="t-str">'+inner+'</span>';
+      }
+      else if (m[2]) out += '<span class="t-var">'+esc(m[2])+'</span>';
+      else if (m[3]) out += (lang==="plain")? esc(m[3]) : '<span class="t-num">'+esc(m[3])+'</span>';
+      else if (m[4]) out += (kw && kw.test(m[4])) ? '<span class="t-kw">'+esc(m[4])+'</span>' : esc(m[4]);
+      last = tok.lastIndex;
+    }
+    return out + esc(code.slice(last));
+  }
+  function hlLine(line, lang){
+    if (lang==="plain"){
+      var ci = line.indexOf("#");
+      return ci>=0 ? esc(line.slice(0,ci))+'<span class="t-com">'+esc(line.slice(ci))+'</span>' : esc(line);
+    }
+    var ci2 = commentStart(line, lang);
+    var code = ci2>=0 ? line.slice(0,ci2) : line;
+    var com  = ci2>=0 ? '<span class="t-com">'+esc(line.slice(ci2))+'</span>' : "";
+    var pre = "", m;
+    if (lang==="yaml" && (m = code.match(/^(\s*(?:-\s+)?)([A-Za-z_][\w.\-\/]*|"[^"]*")(\s*:)(?=\s|$)/))){
+      pre = esc(m[1])+'<span class="t-key">'+esc(m[2])+'</span>'+esc(m[3]); code = code.slice(m[0].length);
+    } else if (lang==="ini" && (m = code.match(/^(\s*)(\[[^\]]+\])/))){
+      pre = esc(m[1])+'<span class="t-kw">'+esc(m[2])+'</span>'; code = code.slice(m[0].length);
+    } else if (lang==="ini" && (m = code.match(/^(\s*)([A-Za-z_%][\w.\-]*)(\s*=)/))){
+      pre = esc(m[1])+'<span class="t-key">'+esc(m[2])+'</span>'+esc(m[3]); code = code.slice(m[0].length);
+    } else if ((lang==="nginx"||lang==="apache") && (m = code.match(/^(\s*)(<\/?[A-Za-z]+|[A-Za-z_][\w]*)/))){
+      pre = esc(m[1])+'<span class="t-kw">'+esc(m[2])+'</span>'; code = code.slice(m[0].length);
+    } else if (lang==="json" && (m = code.match(/^(\s*)("[^"]*")(\s*:)/))){
+      pre = esc(m[1])+'<span class="t-key">'+esc(m[2])+'</span>'+esc(m[3]); code = code.slice(m[0].length);
+    } else if (lang==="hcl" && (m = code.match(/^(\s*)([A-Za-z_][\w]*)(\s*=)/))){
+      pre = esc(m[1])+'<span class="t-key">'+esc(m[2])+'</span>'+esc(m[3]); code = code.slice(m[0].length);
+    }
+    return pre + hlCode(code, lang) + com;
+  }
+  function highlight(text, lang){
+    return text.split("\n").map(function(l){ return '<span class="l">'+(hlLine(l,lang)||"")+'</span>'; }).join("");
+  }
+
+  /* ---------- collect content ---------- */
+  var byId = {};
+  SECTIONS.forEach(function(s){ s.groups=[]; s.files=[]; s.docs=[]; byId[s.id]=s; });
+  document.querySelectorAll('script.cmds').forEach(function(el){
+    var s = byId[el.dataset.sec], g = null;
+    trimBlock(el.textContent).split("\n").forEach(function(line){
+      line = line.replace(/\s+$/,""); if (!line.trim()) return;
+      if (line.indexOf("## ")===0){ g = {name: line.slice(3), rows: []}; s.groups.push(g); return; }
+      var i = line.indexOf(ARROW);
+      var cmd = i>=0 ? line.slice(0,i) : line, desc = i>=0 ? line.slice(i+ARROW.length) : "";
+      if (!g){ g = {name:"", rows:[]}; s.groups.push(g); }
+      g.rows.push({cmd:cmd.trim(), desc:desc.trim()});
+    });
+  });
+  document.querySelectorAll('script.file').forEach(function(el){
+    byId[el.dataset.sec].files.push({name:el.dataset.name, lang:el.dataset.lang||"plain", note:el.dataset.note||"", code:trimBlock(el.textContent)});
+  });
+  document.querySelectorAll('script.docs').forEach(function(el){
+    trimBlock(el.textContent).split("\n").forEach(function(line){
+      var p = line.split(ARROW); if (p.length<2) return;
+      byId[el.dataset.sec].docs.push({title:p[0].trim(), url:p[1].trim(), note:(p[2]||"").trim()});
+    });
+  });
+
+  /* ---------- render ---------- */
+  var COPY_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>';
+  var CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>';
+  var LANG_LABEL = {yaml:"YAML",docker:"Dockerfile",bash:"Shell",ini:"Config",hcl:"HCL",groovy:"Groovy",nginx:"Nginx",apache:"Apache",json:"JSON",plain:"Text"};
+  var root = document.getElementById("sections"), html = [];
+  SECTIONS.forEach(function(s){
+    var h = '<section class="sec" id="'+s.id+'" data-sec="'+s.id+'">';
+    h += '<div class="sec-head"><h2>'+esc(s.title)+'</h2><span class="src">'+esc(s.cat)+' · from '+esc(s.src)+'</span></div>';
+    h += '<p class="sec-intro">'+esc(s.intro)+'</p>';
+    if (s.note) h += '<p class="note"><b>Course note.</b> '+s.note+'</p>';
+    var jumps = ['<a href="#'+s.id+'-cmds">Commands · '+s.groups.reduce(function(n,g){return n+g.rows.length;},0)+'</a>'];
+    if (s.files.length) jumps.push('<a href="#'+s.id+'-files">Files · '+s.files.length+'</a>');
+    if (s.docs.length) jumps.push('<a href="#'+s.id+'-docs">Docs · '+s.docs.length+'</a>');
+    h += '<div class="jump">'+jumps.join("")+'</div>';
+    h += '<h3 class="part" id="'+s.id+'-cmds">Commands</h3>';
+    s.groups.forEach(function(g){
+      h += '<div class="group">'+(g.name?'<h4>'+esc(g.name)+'</h4>':'')+'<div class="tbl">';
+      g.rows.forEach(function(r){
+        var hay = (g.name+" "+r.cmd+" "+r.desc+" "+s.title).toLowerCase();
+        h += '<div class="row" data-hay="'+esc(hay)+'"><code>'+escPh(r.cmd)+'</code><div class="d">'+esc(r.desc)+'</div>'+
+             '<button class="cp" type="button" aria-label="Copy command" data-copy="'+esc(r.cmd)+'">'+COPY_SVG+'</button></div>';
+      });
+      h += '</div></div>';
+    });
+    if (s.files.length){
+      h += '<h3 class="part" id="'+s.id+'-files">Files</h3><div class="files">';
+      s.files.forEach(function(f, i){
+        var hay = (f.name+" "+f.note+" "+f.code+" "+s.title).toLowerCase();
+        h += '<figure class="win" data-hay="'+esc(hay)+'"><div class="win-box"><div class="win-bar"><span class="dots"><i></i><i></i><i></i></span>'+
+             '<span class="tab">'+esc(f.name)+'</span><span class="lang">'+(LANG_LABEL[f.lang]||f.lang)+'</span>'+
+             '<button class="cp" type="button" aria-label="Copy file contents" data-file="'+s.id+':'+i+'">'+COPY_SVG+'</button></div>'+
+             '<pre><code>'+highlight(f.code, f.lang)+'</code></pre></div>'+
+             (f.note?'<figcaption>'+esc(f.note)+'</figcaption>':'')+'</figure>';
+      });
+      h += '</div>';
+    }
+    if (s.docs.length){
+      h += '<h3 class="part" id="'+s.id+'-docs">Documentation</h3><ul class="docs">';
+      s.docs.forEach(function(d){
+        h += '<li data-hay="'+esc((d.title+" "+d.note+" "+s.title).toLowerCase())+'"><a href="'+esc(d.url)+'" target="_blank" rel="noopener">'+esc(d.title)+'</a>'+
+             (d.note?'<span>'+esc(d.note)+'</span>':'')+'<small>'+esc(d.url.replace(/^https?:\/\//,""))+'</small></li>';
+      });
+      h += '</ul>';
+    }
+    h += '</section>';
+    html.push(h);
+  });
+  root.innerHTML = html.join("");
+
+  /* rail */
+  var rail = document.getElementById("rail"), rh = [], lastCat = null;
+  SECTIONS.forEach(function(s){
+    if (s.cat!==lastCat){ rh.push('<h4>'+esc(s.cat)+'</h4>'); lastCat = s.cat; }
+    var n = s.groups.reduce(function(a,g){return a+g.rows.length;},0);
+    rh.push('<a href="#'+s.id+'" data-nav="'+s.id+'">'+esc(s.title)+'<span>'+n+'</span></a>');
+  });
+  rail.innerHTML = rh.join("");
+
+  /* copy */
+  var toast = document.getElementById("toast"), tt;
+  function showToast(msg){ toast.textContent = msg; toast.classList.add("show"); clearTimeout(tt); tt = setTimeout(function(){toast.classList.remove("show");},1400); }
+  function selectFallback(node){
+    try { var r = document.createRange(); r.selectNodeContents(node); var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r); showToast("Selected. Press Ctrl+C"); } catch(e){}
+  }
+  document.addEventListener("click", function(e){
+    var b = e.target.closest(".cp"); if (!b) return;
+    var text, node;
+    if (b.dataset.file){ var p = b.dataset.file.split(":"); text = byId[p[0]].files[+p[1]].code; node = b.closest(".win-box").querySelector("pre"); }
+    else { text = b.dataset.copy; node = b.parentNode.querySelector("code"); }
+    var done = function(){ b.classList.add("ok"); b.innerHTML = CHECK_SVG; showToast("Copied"); setTimeout(function(){ b.classList.remove("ok"); b.innerHTML = COPY_SVG; },1200); };
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, function(){ selectFallback(node); });
+      else selectFallback(node);
+    } catch(err){ selectFallback(node); }
+  });
+
+  /* search */
+  var q = document.getElementById("q"), count = document.getElementById("count"), empty = document.getElementById("empty");
+  var secs = Array.prototype.slice.call(root.querySelectorAll("section.sec"));
+  function applySearch(){
+    var term = q.value.trim().toLowerCase(), total = 0, shown = 0;
+    var words = term ? term.split(/\s+/) : [];
+    secs.forEach(function(sec){
+      var hits = 0;
+      sec.querySelectorAll("[data-hay]").forEach(function(el){
+        var hay = el.dataset.hay, ok = words.every(function(w){ return hay.indexOf(w)>=0; });
+        el.hidden = !ok; if (ok) hits++;
+      });
+      sec.querySelectorAll(".group").forEach(function(g){ g.hidden = !g.querySelector(".row:not([hidden])"); });
+      ["files","docs"].forEach(function(k){
+        var head = sec.querySelector("h3.part[id$='-"+k+"']");
+        if (head){ var box = head.nextElementSibling; var any = box.querySelector("[data-hay]:not([hidden])"); head.hidden = !any; box.hidden = !any; }
+      });
+      var ch = sec.querySelector("h3.part[id$='-cmds']"); if (ch) ch.hidden = !sec.querySelector(".row:not([hidden])");
+      sec.querySelector(".jump").hidden = !!term;
+      var note = sec.querySelector(".note"); if (note) note.hidden = !!term;
+      sec.hidden = hits===0;
+      var nav = rail.querySelector('[data-nav="'+sec.id+'"]'); if (nav) nav.classList.toggle("dim", hits===0);
+      total += hits; if (hits) shown++;
+    });
+    count.textContent = term ? total+" match"+(total===1?"":"es") : "";
+    empty.hidden = !(term && total===0);
+  }
+  q.addEventListener("input", applySearch);
+  document.addEventListener("keydown", function(e){
+    if (e.key==="/" && document.activeElement!==q){ e.preventDefault(); q.focus(); q.select(); }
+    else if (e.key==="Escape" && document.activeElement===q){ q.value=""; applySearch(); }
+  });
+
+  /* active section in rail */
+  if ("IntersectionObserver" in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if (en.isIntersecting){
+          rail.querySelectorAll("a.on").forEach(function(a){a.classList.remove("on");});
+          var a = rail.querySelector('[data-nav="'+en.target.id+'"]'); if (a){ a.classList.add("on"); }
+        }
+      });
+    }, {rootMargin:"-30% 0px -65% 0px"});
+    secs.forEach(function(s){ io.observe(s); });
+  }
+  if (location.hash){ var t = document.getElementById(location.hash.slice(1)); if (t) setTimeout(function(){ t.scrollIntoView(); }, 0); }
+})();
+</script>
+</body>
+</html>
