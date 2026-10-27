@@ -56,4 +56,4 @@ docker ps -a ⟶ List all containers, including stopped ones
 - Files: `<script type="text/plain" class="file" data-sec="..." data-name="..." data-lang="yaml">`
 - Docs: `Title ⟶ URL ⟶ short note`
 
-Open an issue or a pull request with corrections or additions.
+Found a mistake or want a command added? [Open an issue](https://github.com/ramisalahhh/devops-command-reference/issues/new/choose) (there are templates for both) or send a pull request.

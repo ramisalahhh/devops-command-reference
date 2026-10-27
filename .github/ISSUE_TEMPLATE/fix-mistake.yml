@@ -1,0 +1,23 @@
+name: Report a mistake
+description: A command, description, file or link is wrong or out of date
+title: "[Fix] "
+labels: [bug]
+body:
+  - type: textarea
+    id: wrong
+    attributes:
+      label: What's wrong
+      description: Copy the line or file name from the site.
+    validations:
+      required: true
+  - type: textarea
+    id: correct
+    attributes:
+      label: What it should be
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Source (optional)
+      placeholder: Link to official docs

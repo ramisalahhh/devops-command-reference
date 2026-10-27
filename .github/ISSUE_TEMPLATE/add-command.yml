@@ -1,0 +1,43 @@
+name: Add a command or file
+description: Suggest a command, config template or doc link that's missing
+title: "[Add] "
+labels: [enhancement]
+body:
+  - type: dropdown
+    id: section
+    attributes:
+      label: Section
+      options:
+        - Linux
+        - Git & GitHub
+        - Docker
+        - Docker Compose
+        - Ansible
+        - Jenkins & CI/CD
+        - Kubernetes
+        - Prometheus & Grafana
+        - Nginx & Apache
+        - AWS
+        - Terraform
+        - New section
+    validations:
+      required: true
+  - type: textarea
+    id: command
+    attributes:
+      label: Command, file or link
+      description: Paste it exactly as it should appear.
+      render: shell
+    validations:
+      required: true
+  - type: input
+    id: description
+    attributes:
+      label: One-line description
+      placeholder: What it does, in plain words
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: When do you use it? (optional)

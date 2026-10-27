@@ -158,7 +158,7 @@ img{max-width:100%}
   <main id="main">
     <div class="intro">
       <h1>Commands and config files for everyday DevOps work</h1>
-      <p>A searchable reference built while studying DevOps &amp; Cloud: Linux, Git, Docker, Ansible, Jenkins, Kubernetes, Prometheus, web servers, AWS and Terraform. It covers what the course taught plus the extra commands you need in real work. Each tool has three parts: <b>commands</b>, <b>files</b> (ready-to-copy templates shown as editor windows) and <b>docs</b>.</p>
+      <p>A searchable reference built while studying DevOps &amp; Cloud: Linux, Git, Docker, Ansible, Jenkins, Kubernetes, Prometheus, web servers, AWS and Terraform. It covers the fundamentals plus the extra commands you need in real work. Each tool has three parts: <b>commands</b>, <b>files</b> (ready-to-copy templates shown as editor windows) and <b>docs</b>.</p>
       <div class="legend"><span><span class="ph">&lt;name&gt;</span> = replace with your value</span><span><b>a / b</b> = alternatives</span><span>Click <b>⧉</b> to copy</span><span>Press <b>/</b> to search</span></div>
     </div>
     <div id="sections"></div>
@@ -335,7 +335,7 @@ chmod calculator ⟶ https://chmod-calculator.com/ ⟶ Click boxes, get the numb
 ## Users
 sudo useradd -m -s /bin/bash jane ⟶ Create user with a home folder and bash shell
 sudo adduser jane ⟶ Interactive version (Ubuntu/Debian)
-sudo passwd jane ⟶ Set or change a password (no name = your own)
+sudo passwd jane ⟶ Set or change a user's password (plain passwd changes your own)
 sudo passwd -l jane / sudo passwd -u jane ⟶ Lock / unlock an account
 sudo usermod -aG docker jane ⟶ Add to a group (keep -a or you replace all groups)
 sudo usermod -aG sudo jane ⟶ Give sudo rights (wheel group on RHEL)
@@ -401,7 +401,7 @@ systemctl is-active nginx / is-enabled nginx ⟶ Quick yes/no checks
 journalctl -u docker.service ⟶ Logs for one service
 journalctl -u nginx -f ⟶ Follow live
 journalctl --since "1 hour ago" ⟶ Filter by time
-journalctl -p err -b ⟶ Only errors since last boot
+journalctl -p err -b ⟶ Only errors from the current boot
 /var/log/syslog · /var/log/auth.log ⟶ Ubuntu system log · logins and sudo
 ## Scheduling
 crontab -e ⟶ Edit your scheduled jobs
@@ -437,7 +437,7 @@ WantedBy=multi-user.target
 # │ │ │ │ ┌──── day of week (0-6, Sunday = 0)
 # │ │ │ │ │
   0 2 * * *    /opt/scripts/backup.sh >> /var/log/backup.log 2>&1
-*/5 * * * *    curl -fs http://localhost:3000/health || systemctl restart myapp
+*/5 * * * *    curl -fs http://localhost:3000/health || systemctl restart myapp   # root crontab (sudo crontab -e)
   0 9 * * 1    /opt/scripts/weekly-report.sh
 @reboot        /opt/scripts/on-boot.sh
 </script>
@@ -470,7 +470,7 @@ sudo dnf update -y ⟶ Update everything
 dnf list installed | grep nginx ⟶ Is it installed?
 </script>
 <script type="text/plain" class="docs" data-sec="pkgs">
-Ubuntu package management ⟶ https://ubuntu.com/server/docs/package-management ⟶ apt explained
+Ubuntu package management ⟶ https://ubuntu.com/server/docs/how-to/software/package-management/ ⟶ apt explained
 Ubuntu packages search ⟶ https://packages.ubuntu.com/ ⟶ Find which package has a file
 DNF documentation ⟶ https://dnf.readthedocs.io/en/latest/command_ref.html ⟶ RHEL family
 </script>
@@ -503,14 +503,14 @@ sudo firewall-cmd --add-port=80/tcp --permanent && sudo firewall-cmd --reload �
 ssh user@<ip> ⟶ Connect to a server
 ssh -i key.pem ubuntu@<ec2-public-ip> ⟶ Connect with a key file (AWS EC2)
 ssh-keygen -t ed25519 -C "you@example.com" ⟶ Create a key pair (~/.ssh/id_ed25519 and .pub)
-ssh-keygen -t rsa -b 4096 ⟶ RSA key (as in the course)
+ssh-keygen -t rsa -b 4096 ⟶ RSA key, for older systems that don't accept ed25519
 ssh-copy-id user@<ip> ⟶ Install your public key on a server = password-less login
 cat ~/.ssh/id_ed25519.pub ⟶ Show your public key (safe to share)
 ssh-keygen -R <ip> ⟶ Remove an old entry from known_hosts
 scp file.txt user@<ip>:/path/ ⟶ Copy a file to a server
 scp -r user@<ip>:/path/dir ./ ⟶ Copy a folder from a server
 rsync -avz dir/ user@<ip>:/path/ ⟶ Sync a folder (sends only changes)
-sudo vim /etc/ssh/sshd_config && sudo systemctl restart ssh ⟶ Edit SSH server settings, then restart
+sudo vim /etc/ssh/sshd_config && sudo systemctl restart ssh ⟶ Edit SSH server settings, then restart (the service is sshd on RHEL)
 ~/.ssh/known_hosts · ~/.ssh/authorized_keys ⟶ Servers you trust · keys allowed to log in as you
 </script>
 <script type="text/plain" class="file" data-sec="net" data-name="~/.ssh/config" data-lang="ini" data-note="Nicknames for servers. After this, ssh web1 is enough. Ansible also reads it.">
@@ -555,16 +555,16 @@ lsof /var/log/syslog ⟶ Which processes have this file open
 dd if=/dev/zero of=/tmp/myfile bs=1024 count=100 ⟶ Create a 100 KB file
 ## LVM: physical volume → volume group → logical volume
 sudo pvcreate /dev/sdb1 /dev/sdb2 ⟶ Turn partitions into physical volumes
-sudo vgcreate vg-nhvg /dev/sdb1 /dev/sdb2 ⟶ Pool them into a volume group
-sudo lvcreate -n nhlv -L 2G vg-nhvg ⟶ Make a 2 GB logical volume
+sudo vgcreate vg-data /dev/sdb1 /dev/sdb2 ⟶ Pool them into a volume group
+sudo lvcreate -n lv-data -L 2G vg-data ⟶ Make a 2 GB logical volume
 pvs · vgs · lvs ⟶ Short status (pvdisplay, vgdisplay, lvdisplay for detail)
-sudo mkfs -t xfs /dev/vg-nhvg/nhlv ⟶ Format the logical volume
-sudo mkdir /nhlvdir && sudo mount /dev/vg-nhvg/nhlv /nhlvdir ⟶ Mount it
-sudo vgextend vg-nhvg /dev/sdc1 ⟶ Add a new disk to the group
-sudo lvextend -r -L +1G /dev/vg-nhvg/nhlv ⟶ Grow by 1 GB and resize the filesystem too
-sudo xfs_growfs /nhlvdir / sudo resize2fs /dev/vg-nhvg/nhlv ⟶ Grow filesystem by hand (XFS / ext4)
-sudo umount /nhlvdir && sudo lvremove /dev/vg-nhvg/nhlv ⟶ Remove an LV (unmount first)
-sudo vgremove vg-nhvg && sudo pvremove /dev/sdb1 /dev/sdb2 ⟶ Then the group, then the PVs
+sudo mkfs -t xfs /dev/vg-data/lv-data ⟶ Format the logical volume
+sudo mkdir /data2 && sudo mount /dev/vg-data/lv-data /data2 ⟶ Mount it
+sudo vgextend vg-data /dev/sdc1 ⟶ Add a new disk to the group
+sudo lvextend -r -L +1G /dev/vg-data/lv-data ⟶ Grow by 1 GB and resize the filesystem too
+sudo xfs_growfs /data2 / sudo resize2fs /dev/vg-data/lv-data ⟶ Grow filesystem by hand (XFS / ext4)
+sudo umount /data2 && sudo lvremove /dev/vg-data/lv-data ⟶ Remove an LV (unmount first)
+sudo vgremove vg-data && sudo pvremove /dev/sdb1 /dev/sdb2 ⟶ Then the group, then the PVs
 ## Swap
 sudo mkswap /dev/sdd1 ⟶ Format a partition as swap
 sudo swapon /dev/sdd1 ⟶ Turn it on
@@ -575,7 +575,7 @@ sudo fallocate -l 2G /swapfile && sudo chmod 600 /swapfile && sudo mkswap /swapf
 <script type="text/plain" class="file" data-sec="storage" data-name="/etc/fstab" data-lang="ini" data-note="Mounts that survive a reboot. After editing run sudo mount -a; an error here can stop the server from booting.">
 # <device>                                   <mount>    <type>  <options>  <dump> <fsck>
 UUID=3f2a9c1e-5b7d-4e0a-9d61-2c8b7f1e4a90    /data      ext4    defaults   0      2
-/dev/vg-nhvg/nhlv                            /nhlvdir   xfs     defaults   0      0
+/dev/vg-data/lv-data                            /data2   xfs     defaults   0      0
 /dev/sdd1                                    none       swap    sw         0      0
 /swapfile                                    none       swap    sw         0      0
 </script>
@@ -716,7 +716,7 @@ git switch -c feature / git checkout -b feature ⟶ Create a branch and switch t
 git switch main / git checkout main ⟶ Switch branch
 git merge feature ⟶ Merge feature into the current branch
 git rebase main ⟶ Replay your commits on top of main
-git branch -d feature / git branch -D feature ⟶ Delete branch (force)
+git branch -d feature / git branch -D feature ⟶ Delete a merged branch / force-delete an unmerged one
 ## Remote (GitHub)
 git remote add origin <url> ⟶ Connect the repo to GitHub
 git remote -v ⟶ Show remotes
@@ -802,7 +802,7 @@ docker logs --tail 50 web ⟶ Last 50 lines
 docker exec -it web bash ⟶ Shell inside a running container (use sh on alpine)
 docker exec web ls /usr/share/nginx/html ⟶ Run one command inside
 docker inspect web ⟶ All details as JSON (IP, mounts, env)
-docker inspect -f '{{.NetworkSettings.IPAddress}}' web ⟶ Just the IP
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}} {{end}}' web ⟶ Just the IP (works on any network)
 docker stats ⟶ Live CPU / memory per container
 docker top web ⟶ Processes inside a container
 docker cp web:/etc/nginx/nginx.conf . ⟶ Copy files out (or in, reversed)
@@ -823,9 +823,9 @@ docker run -d --name c1 --network mynet alpine sleep 1d ⟶ Attach at start
 docker network connect mynet web ⟶ Attach a running container
 docker network inspect bridge ⟶ Containers and IPs on a network
 docker run --network host nginx ⟶ Share the host's network (no -p needed)
-docker network create -d macvlan --subnet=10.0.0.0/24 --gateway=10.0.0.1 -o parent=eth0.100 macvlan100 ⟶ MACVLAN network (from the course)
+docker network create -d macvlan --subnet=10.0.0.0/24 --gateway=10.0.0.1 -o parent=eth0.100 macvlan100 ⟶ MACVLAN network: containers get their own IP on your LAN
 docker run -it --dns=8.8.8.8 alpine sh ⟶ Custom DNS server
-brctl show ⟶ Linux bridges Docker created (sudo apt install bridge-utils)
+ip link show type bridge · brctl show ⟶ Linux bridges Docker created (brctl needs bridge-utils)
 ## Security
 docker run -u 1000:1000 myapp ⟶ Run as a non-root user
 docker run --cap-drop ALL --cap-add NET_BIND_SERVICE nginx ⟶ Only the Linux capabilities you need
@@ -899,7 +899,7 @@ COPY --from=build /app/dist /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
 </script>
-<script type="text/plain" class="file" data-sec="docker" data-name="Dockerfile (Python)" data-lang="docker" data-note="Python/Flask app, the one the course's Compose example runs with python app.py.">
+<script type="text/plain" class="file" data-sec="docker" data-name="Dockerfile (Python)" data-lang="docker" data-note="Python/Flask app. The counter-app Compose example below builds this and runs python app.py.">
 FROM python:3.12-slim
 
 WORKDIR /code
@@ -938,7 +938,7 @@ Docker Hub ⟶ https://hub.docker.com/ ⟶ Find official images
 <script type="text/plain" class="cmds" data-sec="compose">
 ## Run the stack
 docker compose up -d ⟶ Create and start every service in the background
-docker compose -f nh-compose.yml up -d ⟶ Use a file with a custom name
+docker compose -f my-compose.yml up -d ⟶ Use a file with a custom name
 docker compose up -d --build ⟶ Rebuild images first
 docker compose up -d --scale web=3 ⟶ Run 3 copies of a service
 docker compose down ⟶ Stop and remove containers and the network
@@ -1014,7 +1014,7 @@ DB_PASSWORD=change-me
 NODE_ENV=production
 APP_PORT=3000
 </script>
-<script type="text/plain" class="file" data-sec="compose" data-name="docker-compose.yml (course: counter app)" data-lang="yaml" data-note="The course example, completed with the long port syntax, a network and a volume. Run: docker compose up -d">
+<script type="text/plain" class="file" data-sec="compose" data-name="docker-compose.yml (example: counter app)" data-lang="yaml" data-note="Flask + Redis counter app with the long port syntax, a network and a volume. Run: docker compose up -d">
 services:
   web-fe:
     build: .
@@ -1027,7 +1027,7 @@ services:
     volumes:
       - type: volume
         source: counter-vol
-        target: /app
+        target: /code
 
   redis:
     image: "redis:alpine"
@@ -1040,7 +1040,7 @@ networks:
 volumes:
   counter-vol:
 </script>
-<script type="text/plain" class="file" data-sec="compose" data-name="docker-compose.yml (course: MEAN stack)" data-lang="yaml" data-note="Angular + Express + MongoDB from the course slides. Each build: points at a folder with its own Dockerfile.">
+<script type="text/plain" class="file" data-sec="compose" data-name="docker-compose.yml (example: MEAN stack)" data-lang="yaml" data-note="Angular + Express + MongoDB. Each build: points at a folder with its own Dockerfile.">
 services:
   angular:                    # front-end
     build: client             # folder with the Dockerfile
@@ -1229,7 +1229,7 @@ become_method = sudo
 <p>Server: {{ ansible_hostname }} ({{ ansible_default_ipv4.address }})</p>
 <p>OS: {{ ansible_distribution }} {{ ansible_distribution_version }}</p>
 </script>
-<script type="text/plain" class="file" data-sec="ansible" data-name="deploy-node.yml (course project)" data-lang="yaml" data-note="The course project: install Node and npm, create a user, unpack the app artifact, start it and verify it runs. Run: ansible-playbook -i hosts deploy-node.yml">
+<script type="text/plain" class="file" data-sec="ansible" data-name="deploy-node.yml (project)" data-lang="yaml" data-note="Mini project: install Node and npm, create a user, unpack the app artifact, start it and verify it runs. Run: ansible-playbook -i hosts deploy-node.yml">
 ---
 - name: Install Node.js and npm
   hosts: nodeservers
@@ -1486,24 +1486,23 @@ fold_lines: >
 log_path: "{{ app_dir }}/logs"
 </script>
 <script type="text/plain" class="docs" data-sec="ansible">
-Ansible documentation ⟶ https://docs.ansible.com/ansible/latest/ ⟶ Start page
-Getting started ⟶ https://docs.ansible.com/ansible/latest/getting_started/index.html ⟶ First inventory and playbook
-Playbook guide ⟶ https://docs.ansible.com/ansible/latest/playbook_guide/index.html ⟶ Plays, loops, conditions, handlers
-Inventory guide ⟶ https://docs.ansible.com/ansible/latest/inventory_guide/intro_inventory.html ⟶ Hosts, groups, variables
-Built-in modules ⟶ https://docs.ansible.com/ansible/latest/collections/ansible/builtin/index.html ⟶ apt, copy, service, user…
-All collections index ⟶ https://docs.ansible.com/ansible/latest/collections/index.html ⟶ community.docker, amazon.aws…
-Roles ⟶ https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_reuse_roles.html ⟶ Structure and reuse
-Configuration settings ⟶ https://docs.ansible.com/ansible/latest/reference_appendices/config.html ⟶ Every ansible.cfg option
-YAML syntax ⟶ https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html ⟶ YAML rules
-Vault ⟶ https://docs.ansible.com/ansible/latest/vault_guide/index.html ⟶ Encrypt secrets
+Ansible documentation ⟶ https://docs.ansible.com/projects/ansible/latest/ ⟶ Start page
+Getting started ⟶ https://docs.ansible.com/projects/ansible/latest/getting_started/index.html ⟶ First inventory and playbook
+Playbook guide ⟶ https://docs.ansible.com/projects/ansible/latest/playbook_guide/index.html ⟶ Plays, loops, conditions, handlers
+Inventory guide ⟶ https://docs.ansible.com/projects/ansible/latest/inventory_guide/intro_inventory.html ⟶ Hosts, groups, variables
+Built-in modules ⟶ https://docs.ansible.com/projects/ansible/latest/collections/ansible/builtin/index.html ⟶ apt, copy, service, user…
+All collections index ⟶ https://docs.ansible.com/projects/ansible/latest/collections/index.html ⟶ community.docker, amazon.aws…
+Roles ⟶ https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_reuse_roles.html ⟶ Structure and reuse
+Configuration settings ⟶ https://docs.ansible.com/projects/ansible/latest/reference_appendices/config.html ⟶ Every ansible.cfg option
+YAML syntax ⟶ https://docs.ansible.com/projects/ansible/latest/reference_appendices/YAMLSyntax.html ⟶ YAML rules
+Vault ⟶ https://docs.ansible.com/projects/ansible/latest/vault_guide/index.html ⟶ Encrypt secrets
 Ansible Galaxy ⟶ https://galaxy.ansible.com/ ⟶ Community roles and collections
-Course project app ⟶ https://github.com/Ahmed-Moourad/simplenodejs-app ⟶ The Node app from session 4
 </script>
 
 <!-- ============ CI/CD ============ -->
 <script type="text/plain" class="cmds" data-sec="cicd">
 ## Install Jenkins (Ubuntu)
-sudo apt install -y fontconfig openjdk-21-jre ⟶ Jenkins needs Java (17 or 21)
+sudo apt install -y fontconfig openjdk-21-jre ⟶ Current Jenkins needs Java 21 or later
 (add the Jenkins apt repo + key from jenkins.io/doc/book/installing/linux) ⟶ The repo key changes over time; copy that step from the official page
 sudo apt update && sudo apt install -y jenkins ⟶ Install
 sudo systemctl enable --now jenkins ⟶ Start now and on boot
@@ -1586,7 +1585,7 @@ pipeline {
     }
 }
 </script>
-<script type="text/plain" class="file" data-sec="cicd" data-name="Jenkinsfile (Maven + JUnit)" data-lang="groovy" data-note="The course's Java example written as a valid declarative pipeline.">
+<script type="text/plain" class="file" data-sec="cicd" data-name="Jenkinsfile (Maven + JUnit)" data-lang="groovy" data-note="Java build: compile, test, package the jar and publish JUnit results.">
 pipeline {
     agent any
 
@@ -1807,7 +1806,7 @@ Jenkins plugins ⟶ https://plugins.jenkins.io/ ⟶ Git, Docker, Ansible plugins
 GitHub Actions docs ⟶ https://docs.github.com/en/actions ⟶ Workflows, runners, secrets, environments
 GitHub CLI manual ⟶ https://cli.github.com/manual/ ⟶ gh secret, gh workflow, gh run
 docker/build-push-action ⟶ https://github.com/docker/build-push-action ⟶ Build and push images in Actions
-community.docker collection ⟶ https://docs.ansible.com/ansible/latest/collections/community/docker/index.html ⟶ docker_container, docker_image modules
+community.docker collection ⟶ https://docs.ansible.com/projects/ansible/latest/collections/community/docker/index.html ⟶ docker_container, docker_image modules
 </script>
 
 <!-- ============ KUBERNETES ============ -->
@@ -2106,7 +2105,7 @@ spec:
           ports:
             - containerPort: 9100
 </script>
-<script type="text/plain" class="file" data-sec="k8s" data-name="job-cronjob.yaml" data-lang="yaml" data-note="Job = run to completion once. CronJob = Job on a schedule. CronJob is batch/v1 now (the course slides show the old batch/v1beta1).">
+<script type="text/plain" class="file" data-sec="k8s" data-name="job-cronjob.yaml" data-lang="yaml" data-note="Job = run to completion once. CronJob = Job on a schedule. CronJob is batch/v1 now (older tutorials show batch/v1beta1, which no longer works).">
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -2155,7 +2154,7 @@ minikube start ⟶ https://minikube.sigs.k8s.io/docs/start/ ⟶ Local cluster
 
 <!-- ============ PROMETHEUS ============ -->
 <script type="text/plain" class="cmds" data-sec="prom">
-## Install Prometheus as a service (course steps)
+## Install Prometheus as a service (step by step)
 sudo useradd --no-create-home --shell /bin/false prometheus ⟶ Service user
 sudo mkdir /etc/prometheus /var/lib/prometheus ⟶ Config and data folders
 sudo chown prometheus:prometheus /etc/prometheus /var/lib/prometheus ⟶ Give them to that user
@@ -2188,7 +2187,7 @@ rate(node_network_receive_bytes_total[5m]) ⟶ Per-second rate over 5 minutes (f
 100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) ⟶ CPU usage %
 (1 - node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) * 100 ⟶ Memory usage %
 100 - (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"} * 100) ⟶ Disk usage %
-rate(prometheus_engine_query_duration_seconds_sum[1m]) ⟶ Course lab query
+rate(prometheus_engine_query_duration_seconds_sum[1m]) ⟶ Time Prometheus spends running queries
 sum by (job) (rate(http_requests_total[5m])) ⟶ Requests per second per job
 topk(5, rate(node_cpu_seconds_total[5m])) ⟶ Top 5 series
 </script>
@@ -2270,7 +2269,7 @@ inhibit_rules:
     target_matchers: [severity="warning"]
     equal: ["instance"]
 </script>
-<script type="text/plain" class="file" data-sec="prom" data-name="/etc/systemd/system/prometheus.service" data-lang="ini" data-note="Unit file from the course. Then: sudo systemctl daemon-reload && sudo systemctl enable --now prometheus">
+<script type="text/plain" class="file" data-sec="prom" data-name="/etc/systemd/system/prometheus.service" data-lang="ini" data-note="Runs Prometheus as a service. Then: sudo systemctl daemon-reload && sudo systemctl enable --now prometheus">
 [Unit]
 Description=Prometheus
 Wants=network-online.target
@@ -2381,7 +2380,7 @@ sudo apt install -y certbot python3-certbot-nginx ⟶ Install certbot
 sudo certbot --nginx -d example.com -d www.example.com ⟶ Get a certificate and configure Nginx
 sudo certbot renew --dry-run ⟶ Test auto-renewal
 </script>
-<script type="text/plain" class="file" data-sec="web" data-name="/etc/nginx/nginx.conf (contexts)" data-lang="nginx" data-note="The six contexts from the course and how they nest.">
+<script type="text/plain" class="file" data-sec="web" data-name="/etc/nginx/nginx.conf (contexts)" data-lang="nginx" data-note="The six contexts (main, events, http, upstream, server, location) and how they nest.">
 # main context: settings for the whole server
 user www-data;
 worker_processes auto;
@@ -2418,7 +2417,7 @@ http {
     include /etc/nginx/sites-enabled/*;
 }
 </script>
-<script type="text/plain" class="file" data-sec="web" data-name="/etc/nginx/sites-available/lab" data-lang="nginx" data-note="Course lab: custom default page, and two sites on ports 81 and 82. Enable with ln -s into sites-enabled, then nginx -t and reload.">
+<script type="text/plain" class="file" data-sec="web" data-name="/etc/nginx/sites-available/lab" data-lang="nginx" data-note="Practice setup: custom default page, and two sites on ports 81 and 82. Enable with ln -s into sites-enabled, then nginx -t and reload.">
 server {
     listen 81;
     server_name _;
@@ -2459,7 +2458,7 @@ server {
     error_log  /var/log/nginx/app_error.log;
 }
 </script>
-<script type="text/plain" class="file" data-sec="web" data-name="/etc/nginx/conf.d/lb.conf" data-lang="nginx" data-note="Course lab: load balancer across servers. Round-robin by default.">
+<script type="text/plain" class="file" data-sec="web" data-name="/etc/nginx/conf.d/lb.conf" data-lang="nginx" data-note="Load balancer across servers. Round-robin by default.">
 upstream backend {
     # least_conn;     # send to the server with fewest connections
     # ip_hash;        # same client always goes to the same server
@@ -2477,7 +2476,7 @@ server {
     }
 }
 </script>
-<script type="text/plain" class="file" data-sec="web" data-name="/etc/apache2/sites-available/mysite.conf" data-lang="apache" data-note="Course Apache lab in one virtual host: default.html as index, redirect page1 → page2, no directory listing, password-protected folder. Apache comments must be on their own line. Enable: sudo a2ensite mysite.conf && sudo systemctl reload apache2">
+<script type="text/plain" class="file" data-sec="web" data-name="/etc/apache2/sites-available/mysite.conf" data-lang="apache" data-note="One virtual host that does it all: default.html as index, redirect page1 → page2, no directory listing, password-protected folder. Apache comments must be on their own line. Enable: sudo a2ensite mysite.conf && sudo systemctl reload apache2">
 <VirtualHost *:80>
     ServerName mysite.local
     DocumentRoot /var/www/html
@@ -2496,12 +2495,12 @@ server {
         Require all granted
     </Directory>
 
-    # Only one classmate may open /private
+    # Only one user may open /private
     <Directory /var/www/html/private>
         AuthType Basic
         AuthName "Restricted area"
         AuthUserFile /etc/apache2/.htpasswd
-        Require user classmate
+        Require user alice
     </Directory>
 
     ErrorLog ${APACHE_LOG_DIR}/error.log
@@ -2511,7 +2510,7 @@ server {
 <script type="text/plain" class="file" data-sec="web" data-name=".htaccess" data-lang="apache" data-note="Per-folder password protection (needs AllowOverride All). Create users with htpasswd.">
 AuthType Basic
 AuthName "Restricted web page"
-AuthUserFile /var/www/html/.htpasswd
+AuthUserFile /etc/apache2/.htpasswd
 Require valid-user
 </script>
 <script type="text/plain" class="docs" data-sec="web">
@@ -2558,7 +2557,7 @@ aws iam list-users ⟶ Users
 aws iam create-user --user-name dev ⟶ New user
 aws iam attach-user-policy --user-name dev --policy-arn arn:aws:iam::aws:policy/ReadOnlyAccess ⟶ Attach a managed policy
 aws cloudwatch list-metrics --namespace AWS/EC2 ⟶ Available EC2 metrics
-## Services from the course
+## Core services in one line each
 EC2 · AMI · EBS · Snapshot ⟶ Virtual servers · server image · disk · disk backup
 VPC · Subnet · Internet Gateway · NAT Gateway ⟶ Private network · IP range in one AZ · internet access · outbound-only internet for private subnets
 Security Group · Network ACL ⟶ Stateful firewall per instance · stateless firewall per subnet
@@ -2637,7 +2636,7 @@ terraform console ⟶ Try expressions interactively
 terraform providers ⟶ Providers in use
 terraform graph | dot -Tpng > graph.png ⟶ Dependency graph image (needs graphviz)
 </script>
-<script type="text/plain" class="file" data-sec="tf" data-name="project layout" data-lang="plain" data-note="The vars.tf / main.tf / outputs.tf split from the course, plus one folder per environment so each has its own state.">
+<script type="text/plain" class="file" data-sec="tf" data-name="project layout" data-lang="plain" data-note="The usual variables.tf / main.tf / outputs.tf split, plus one folder per environment so each has its own state.">
 infra/
 ├── modules/
 │   └── web/
@@ -2770,7 +2769,7 @@ name           = "my-lab"
 instance_type  = "t3.micro"
 instance_count = 2
 </script>
-<script type="text/plain" class="file" data-sec="tf" data-name="backend.tf" data-lang="hcl" data-note="Keep state in S3 so a team shares one state. Create the bucket first, then terraform init -migrate-state. This replaces the course's old terraform remote config command.">
+<script type="text/plain" class="file" data-sec="tf" data-name="backend.tf" data-lang="hcl" data-note="Keep state in S3 so a team shares one state. Create the bucket first, then terraform init -migrate-state. This replaces the old terraform remote config command.">
 terraform {
   backend "s3" {
     bucket       = "my-terraform-state-bucket"
@@ -2794,7 +2793,7 @@ output "stage_url" {
   value = module.web.url
 }
 </script>
-<script type="text/plain" class="file" data-sec="tf" data-name="conditional-and-loops.tf" data-lang="hcl" data-note="count as an if-statement (from the course), plus for_each, which is better when items have names.">
+<script type="text/plain" class="file" data-sec="tf" data-name="conditional-and-loops.tf" data-lang="hcl" data-note="count as an if-statement, plus for_each, which is better when items have names.">
 # "If" with count: create the instance only when the flag is true
 variable "should_create_instance" {
   type    = bool
@@ -2833,30 +2832,30 @@ Terraform Registry ⟶ https://registry.terraform.io/ ⟶ Providers and public m
 (function(){
   "use strict";
   var SECTIONS = [
-    {id:"linux",   cat:"Linux",        title:"Linux essentials",        src:"S01–04 DevOps Essentials", intro:"Moving around, help, system info. The commands you type a hundred times a day."},
-    {id:"files",   cat:"Linux",        title:"Files & folders",         src:"S01–04 DevOps Essentials", intro:"Create, copy, move, find and archive files, plus the folders that matter on every server."},
-    {id:"text",    cat:"Linux",        title:"Text, pipes & redirection", src:"S01–04 DevOps Essentials", intro:"Search and reshape output and logs. Chaining these with | is most of daily troubleshooting."},
-    {id:"perms",   cat:"Linux",        title:"Permissions",             src:"S01–04 DevOps Essentials", intro:"Who can read, write and run a file. Wrong permissions break SSH keys, web roots and scripts."},
-    {id:"users",   cat:"Linux",        title:"Users & groups",          src:"Linux Lec 1: User Management", intro:"Root, standard and sudo users, groups, and the files that store them."},
-    {id:"procs",   cat:"Linux",        title:"Processes, services & logs", src:"S01–04 · S21–24", intro:"See what's running, control services with systemctl, read logs with journalctl, schedule with cron."},
-    {id:"pkgs",    cat:"Linux",        title:"Packages",                src:"S01–04 DevOps Essentials", intro:"Install software on Ubuntu/Debian (apt, dpkg) and RHEL/CentOS/Amazon Linux (yum, dnf)."},
-    {id:"net",     cat:"Linux",        title:"Networking & SSH",        src:"S01–04 · S05–08", intro:"IPs, DNS, ports, HTTP tests, firewall, and SSH keys (Ansible and every cloud server depend on them)."},
-    {id:"storage", cat:"Linux",        title:"Storage, LVM & swap",     src:"Linux Lec 2: Storage Management", intro:"Partition, format and mount disks; grow storage with LVM; add swap."},
-    {id:"bash",    cat:"Linux",        title:"Bash scripting",          src:"S01–04 DevOps Essentials", intro:"Automate repeated steps. Variables, conditions, loops and functions."},
-    {id:"git",     cat:"Source control", title:"Git & GitHub",          src:"Git · S30–31 Git and GitHub", intro:"Track changes, branch, merge and push to GitHub. CI/CD pipelines start from a Git push."},
-    {id:"docker",  cat:"Containers",   title:"Docker",                  src:"S09–14 Docker", intro:"Build images, run containers, persist data with volumes, connect containers with networks."},
-    {id:"compose", cat:"Containers",   title:"Docker Compose",          src:"S12 Docker 3", intro:"Define a multi-container app in one YAML file and run it with one command.",
-       note:"The course installs the old <code>docker-compose</code> (v1, with a hyphen). Current Docker uses <code>docker compose</code> (v2, with a space); both take the same files. The top-level <code>version:</code> line is now ignored, so you can drop it."},
-    {id:"ansible", cat:"Automation",   title:"Ansible",                 src:"S05–08 Ansible", intro:"Agentless configuration management over SSH. Inventory says where, playbooks say what, modules do the work."},
-    {id:"cicd",    cat:"CI/CD",        title:"Jenkins & CI/CD",         src:"S15 CI/CD · S16 Jenkins", intro:"Build, test and deploy on every push. Jenkinsfile for Jenkins; CI and deploy workflows for GitHub Actions (direct SSH or through Ansible).",
-       note:"The course's <code>triggers { scm { name … urls … } }</code> block is not valid declarative syntax and fails. Use <code>pollSCM('H/5 * * * *')</code> or a GitHub webhook, and check out the repo with the <code>git</code> step, as in the Jenkinsfile below."},
-    {id:"k8s",     cat:"Orchestration", title:"Kubernetes",             src:"S17–20 Intro to Kubernetes", intro:"Run containers across a cluster: Pods, Deployments, Services, storage, config and jobs."},
-    {id:"prom",    cat:"Monitoring",   title:"Prometheus & Grafana",    src:"S21–24 Monitoring with Prometheus", intro:"Scrape metrics, query them with PromQL, alert through Alertmanager and graph in Grafana."},
-    {id:"web",     cat:"Web servers",  title:"Nginx & Apache",          src:"S25–26 Web Server Configurations", intro:"Serve sites, reverse proxy to apps, load balance, password-protect folders, add HTTPS.",
-       note:"Apache 2.4 uses <code>Require</code> for access control. The older <code>Allow</code> / <code>Deny</code> directives from the slides are Apache 2.2 syntax."},
-    {id:"aws",     cat:"Cloud",        title:"AWS",                     src:"S27 AWS · S28–29 Cloud Architecture", intro:"The AWS CLI for EC2, S3, load balancers, Auto Scaling and IAM, plus a one-line map of the services from the course."},
-    {id:"tf",      cat:"Infrastructure as Code", title:"Terraform",     src:"S32–34 Terraform", intro:"Describe infrastructure in .tf files; plan, apply and destroy it repeatably.",
-       note:"Some slides use pre-0.12 syntax: <code>\"${var.name}\"</code> on its own is now just <code>var.name</code> (keep <code>${}</code> only inside strings), <code>tags { }</code> is now <code>tags = { }</code>, and <code>terraform remote config</code> was replaced by a <code>backend</code> block. The files below use current syntax."}
+    {id:"linux",   cat:"Linux",        title:"Linux essentials", intro:"Moving around, help, system info. The commands you type a hundred times a day."},
+    {id:"files",   cat:"Linux",        title:"Files & folders", intro:"Create, copy, move, find and archive files, plus the folders that matter on every server."},
+    {id:"text",    cat:"Linux",        title:"Text, pipes & redirection", intro:"Search and reshape output and logs. Chaining these with | is most of daily troubleshooting."},
+    {id:"perms",   cat:"Linux",        title:"Permissions", intro:"Who can read, write and run a file. Wrong permissions break SSH keys, web roots and scripts."},
+    {id:"users",   cat:"Linux",        title:"Users & groups", intro:"Root, standard and sudo users, groups, and the files that store them."},
+    {id:"procs",   cat:"Linux",        title:"Processes, services & logs", intro:"See what's running, control services with systemctl, read logs with journalctl, schedule with cron."},
+    {id:"pkgs",    cat:"Linux",        title:"Packages", intro:"Install software on Ubuntu/Debian (apt, dpkg) and RHEL/CentOS/Amazon Linux (yum, dnf)."},
+    {id:"net",     cat:"Linux",        title:"Networking & SSH", intro:"IPs, DNS, ports, HTTP tests, firewall, and SSH keys (Ansible and every cloud server depend on them)."},
+    {id:"storage", cat:"Linux",        title:"Storage, LVM & swap", intro:"Partition, format and mount disks; grow storage with LVM; add swap."},
+    {id:"bash",    cat:"Linux",        title:"Bash scripting", intro:"Automate repeated steps. Variables, conditions, loops and functions."},
+    {id:"git",     cat:"Source control", title:"Git & GitHub", intro:"Track changes, branch, merge and push to GitHub. CI/CD pipelines start from a Git push."},
+    {id:"docker",  cat:"Containers",   title:"Docker", intro:"Build images, run containers, persist data with volumes, connect containers with networks."},
+    {id:"compose", cat:"Containers",   title:"Docker Compose", intro:"Define a multi-container app in one YAML file and run it with one command.",
+       note:"Many tutorials still install the old <code>docker-compose</code> (v1, with a hyphen). Current Docker uses <code>docker compose</code> (v2, with a space); both take the same files. The top-level <code>version:</code> line is now ignored, so you can drop it."},
+    {id:"ansible", cat:"Automation",   title:"Ansible", intro:"Agentless configuration management over SSH. Inventory says where, playbooks say what, modules do the work."},
+    {id:"cicd",    cat:"CI/CD",        title:"Jenkins & CI/CD", intro:"Build, test and deploy on every push. Jenkinsfile for Jenkins; CI and deploy workflows for GitHub Actions (direct SSH or through Ansible).",
+       note:"The <code>triggers { scm { name … urls … } }</code> block is not valid declarative syntax and fails. Use <code>pollSCM('H/5 * * * *')</code> or a GitHub webhook, and check out the repo with the <code>git</code> step, as in the Jenkinsfile below."},
+    {id:"k8s",     cat:"Orchestration", title:"Kubernetes", intro:"Run containers across a cluster: Pods, Deployments, Services, storage, config and jobs."},
+    {id:"prom",    cat:"Monitoring",   title:"Prometheus & Grafana", intro:"Scrape metrics, query them with PromQL, alert through Alertmanager and graph in Grafana."},
+    {id:"web",     cat:"Web servers",  title:"Nginx & Apache", intro:"Serve sites, reverse proxy to apps, load balance, password-protect folders, add HTTPS.",
+       note:"Apache 2.4 uses <code>Require</code> for access control. The older <code>Allow</code> / <code>Deny</code> directives you'll see in older guides are Apache 2.2 syntax."},
+    {id:"aws",     cat:"Cloud",        title:"AWS", intro:"The AWS CLI for EC2, S3, load balancers, Auto Scaling and IAM, plus a one-line map of the core services."},
+    {id:"tf",      cat:"Infrastructure as Code", title:"Terraform", intro:"Describe infrastructure in .tf files; plan, apply and destroy it repeatably.",
+       note:"Older tutorials use pre-0.12 syntax: <code>\"${var.name}\"</code> on its own is now just <code>var.name</code> (keep <code>${}</code> only inside strings), <code>tags { }</code> is now <code>tags = { }</code>, and <code>terraform remote config</code> was replaced by a <code>backend</code> block. The files below use current syntax."}
   ];
   var ARROW = " ⟶ ";
   function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
@@ -2967,9 +2966,9 @@ Terraform Registry ⟶ https://registry.terraform.io/ ⟶ Providers and public m
   var root = document.getElementById("sections"), html = [];
   SECTIONS.forEach(function(s){
     var h = '<section class="sec" id="'+s.id+'" data-sec="'+s.id+'">';
-    h += '<div class="sec-head"><h2>'+esc(s.title)+'</h2><span class="src">'+esc(s.cat)+' · from '+esc(s.src)+'</span></div>';
+    h += '<div class="sec-head"><h2>'+esc(s.title)+'</h2><span class="src">'+esc(s.cat)+'</span></div>';
     h += '<p class="sec-intro">'+esc(s.intro)+'</p>';
-    if (s.note) h += '<p class="note"><b>Course note.</b> '+s.note+'</p>';
+    if (s.note) h += '<p class="note"><b>Heads-up.</b> '+s.note+'</p>';
     var jumps = ['<a href="#'+s.id+'-cmds">Commands · '+s.groups.reduce(function(n,g){return n+g.rows.length;},0)+'</a>'];
     if (s.files.length) jumps.push('<a href="#'+s.id+'-files">Files · '+s.files.length+'</a>');
     if (s.docs.length) jumps.push('<a href="#'+s.id+'-docs">Docs · '+s.docs.length+'</a>');
